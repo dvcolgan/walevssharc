@@ -1,0 +1,23 @@
+{
+  "name": "walevssharc",
+  "version": "0.0.1",
+  "description": "Wale vs sharc: the comic: the interactive software title for your computer box",
+  "main": "index.js",
+  "scripts": {
+    "watch": "watchify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js",
+    "build": "browserify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js | uglifyjs -cm > app/assets/bundle.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/dvcolgan/walevssharc"
+  },
+  "author": "David Colgan and Dain Van Epps",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dvcolgan/walevssharc/issues"
+  },
+  "homepage": "https://github.com/dvcolgan/walevssharc",
+  "dependencies": {
+    "mithril": "^0.1.30"
+  }
+}
