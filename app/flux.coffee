@@ -1,4 +1,4 @@
-SuperFlux = require('app/superflux')
+SuperFlux = require('superflux')
 
 
-module.exports = new SuperFlux()
+module.exports = new SuperFlux(socket: ->)
