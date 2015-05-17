@@ -68,4 +68,3 @@ engine.addRoom 'Candy Room', ->
     else if @matches('give guy candy bar') and @hasItem('candy bar')
         @inventoryUse('candy bar')
         @print('The guy snatches the candy bar and greedily scarfs it down in one byte.  "Thanks man I was really hungry!"')
-

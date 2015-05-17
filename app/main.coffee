@@ -1,3 +1,4 @@
+m = require('mithril')
 engine = require('app/engine')
 view = require('app/view')
 

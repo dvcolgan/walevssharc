@@ -4,28 +4,39 @@ synonymData = require('./synonyms')
 module.exports = class Engine
     constructor: ->
         @rooms = {}
+
         @inventory = {}
         @currentRoomName = ''
+        @flags = {}
 
         @commandWords = []
         @message = ''
 
     save: ->
-        localStorage.setItem 'progress', 
-            room: @rooms
+        localStorage.setItem 'progress', JSON.stringify({
+            rooms: @rooms
             inventory: @inventory
             currentRoomName: @currentRoomName
+        })
 
     load: ->
-        data = localStorage.getItem('progress')
-        @room = data.rooms
-        @inventory = data.inventory
-        @currentRoomName = data.currentRoomName
+        try
+            data = JSON.parse(localStorage.getItem('progress'))
+            @rooms = data.rooms
+            @inventory = data.inventory
+            @currentRoomName = data.currentRoomName
+        sr23's 38u ds ha,sr3c ka23srcs2983 as482'r9 9s8 3asu
+            @rooms = {}
+            @flags = {}
+            @inventory = data.inventory
+            @currentRoomName = data.currentRoomName
 
     addRoom: (roomName, callback) ->
         @rooms[roomName] = callback.bind(@)
 
     getCurrentRoomName: -> @currentRoomName
+
+    getInventory: -> JSON.parse(JSON.stringify(@inventory))
 
     doCommand: (commandText) ->
         # clean up the command text

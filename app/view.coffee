@@ -53,7 +53,6 @@ module.exports =
             @vm.command('')
 
     view: (ctrl) ->
-        currentRoomData = roomStore.getCurrentRoomData()
         currentRoomName = roomStore.getCurrentRoomName()
         [
             m '.sidebar',
@@ -86,9 +85,7 @@ module.exports =
                     onclick: ->
                         ctrl.vm.editing = !ctrl.vm.editing
                     'Edit'
-                m 'h1', currentRoomName
-                #for message in scrollbackStore.getPreviousMessages()
-                #m 'p', message
+                m 'h1', engine.getCurrentRoomName()
                 m 'p', scrollbackStore.getTypingMessage()
 
                 m 'form',
@@ -101,20 +98,4 @@ module.exports =
                         config: (element, isInitialized, context) ->
                             element.focus()
                     m 'button[type=submit]', 'Do'
-
-                if ctrl.vm.editing
-                    m 'ul',
-                        m 'li',
-                            m 'label[for=id_location]', 'Location Slug'
-                            m 'input#id_location[type=text]',
-                                value: ctrl.vm.location
-                        m 'li',
-                            m 'label[for=id_name]', 'Name'
-                            m 'input#id_name[type=text]',
-                                value: currentRoomName
-                        for direction in ['north', 'south', 'east', 'west']
-                            m 'li',
-                                m "label[for=id_#{direction}]", direction.capitalize()
-                                m "input#id_#{direction}[type=text]",
-                                    value: ctrl.vm.roomData[direction] or ''
         ]
