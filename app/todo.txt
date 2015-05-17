@@ -1,3 +1,0 @@
-implement synonyms
-implement inventory getting and using
-make a room editor

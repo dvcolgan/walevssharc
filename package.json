@@ -20,7 +20,7 @@
   "dependencies": {
     "coffee-script": "^1.9.1",
     "mithril": "^0.1.30",
-    "superflux": "0.1.5"
+    "superflux": "0.3.0"
   },
   "devDependencies": {
     "browserify": "^9.0.3",
