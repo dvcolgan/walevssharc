@@ -24,9 +24,11 @@ class TextTyper
                 return text[..i]
     
     print: (message) ->
-        @currentMessage = message
-        @typer = new @makeTyper(message)
-        m.redraw()
+        if message != @currentMessage
+            @currentMessage = message
+            @typer = new @makeTyper(message)
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(message))
+            m.redraw()
 
     getTypingMessage: -> if @typer? then @typer() else ''
 
