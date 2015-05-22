@@ -380,13 +380,14 @@ module.exports = function(engine) {
       return this.print('The police come and arrest Billy Ocean on charge of being a really lame artist and completely irrelevant to this game. You Win! High Score.');
     }
   });
-  return engine.addRoom('Wetter Ocean', function() {
+  engine.addRoom('Wetter Ocean', function() {
     if (this.matches('look')) {
       return this.print('This ocean feels wetter than before.');
     } else if (this.matches('go south')) {
       return this.goToRoom('Ocean');
     }
   });
+  return engine.setStartRoom('Ocean');
 };
 
 

@@ -56,3 +56,5 @@ module.exports = (engine) ->
             @print('This ocean feels wetter than before.')
         else if @matches('go south')
             @goToRoom('Ocean')
+
+    engine.setStartRoom('Ocean')
