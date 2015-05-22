@@ -19,7 +19,7 @@
   "homepage": "https://github.com/dvcolgan/walevssharc",
   "dependencies": {
     "coffee-script": "^1.9.1",
-    "mithril": "^0.1.30",
+    "mithril": "^0.2.0",
     "superflux": "0.3.0"
   },
   "devDependencies": {

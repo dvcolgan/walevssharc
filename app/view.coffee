@@ -1,5 +1,6 @@
 m = require('mithril')
 engine = require('app/engine')
+WaleVsSharc = require('app/walevssharc')
 
 
 String.prototype.capitalize = ->
@@ -8,15 +9,13 @@ String.prototype.capitalize = ->
 
 class TextTyper
     constructor: ->
-        @previousMessages = []
         @currentMessage = ''
         @typer = null
-        notify = @notify
-        @makeTyper = (text, speed=8) ->
+        @makeTyper = (text, speed=4) ->
             i = 0
             typeLoop = ->
                 i++
-                notify()
+                m.redraw()
                 if i < text.length - 1
                     setTimeout(typeLoop, speed)
             setTimeout(typeLoop, speed)
@@ -24,14 +23,10 @@ class TextTyper
             return ->
                 return text[..i]
     
-    onPrint: (message) ->
-        if @currentMessage != ''
-            @previousMessages.push(@currentMessage)
+    print: (message) ->
         @currentMessage = message
         @typer = new @makeTyper(message)
-        @notify()
-
-    getPreviousMessages: -> @previousMessages
+        m.redraw()
 
     getTypingMessage: -> if @typer? then @typer() else ''
 
@@ -41,19 +36,30 @@ class TextTyper
 module.exports =
     controller: class
         constructor: ->
-            @vm = {}
-            @vm.editing = false
-            @vm.command = m.prop('')
 
-            doCommand('look')
+            WaleVsSharc(engine)
+            didLoad = engine.load()
+
+            @vm = {}
+            @vm.command = m.prop('')
+            @vm.typer = new TextTyper()
+
+            engine.listen =>
+                @vm.typer.print(engine.getCurrentMessage())
+                m.redraw()
+                engine.save()
+
+            if didLoad
+                engine.doCommand('look')
+            else
+                engine.goToStart()
 
         onCommandSubmit: (e) =>
             e.preventDefault()
-            doCommand(@vm.command())
+            engine.doCommand(@vm.command())
             @vm.command('')
 
     view: (ctrl) ->
-        currentRoomName = roomStore.getCurrentRoomName()
         [
             m '.sidebar',
                 style:
@@ -64,29 +70,23 @@ module.exports =
                     style:
                         marginTop: 0
                     'Inventory'
-                for itemName, state of inventoryStore.getAll()
+                for itemName, state of engine.getInventory()
                     if state == 'gotten'
                         m 'p',
-                            data.items[itemName].name
+                            itemName
                     else if state == 'used'
                         m 'p',
                             style:
                                 textDecoration: 'line-through'
-                            data.items[itemName].name
+                            itemName
 
             m '.content',
                 style:
                     width: (window.innerWidth - 260) + 'px'
                     padding: '20px'
                     paddingTop: 0
-                m 'button[type=button]',
-                    style:
-                        float: 'right'
-                    onclick: ->
-                        ctrl.vm.editing = !ctrl.vm.editing
-                    'Edit'
                 m 'h1', engine.getCurrentRoomName()
-                m 'p', scrollbackStore.getTypingMessage()
+                m 'p', ctrl.vm.typer.getTypingMessage()
 
                 m 'form',
                     onsubmit: ctrl.onCommandSubmit
@@ -96,6 +96,7 @@ module.exports =
                         onchange: m.withAttr('value', ctrl.vm.command)
                         value: ctrl.vm.command()
                         config: (element, isInitialized, context) ->
-                            element.focus()
+                            if not isInitialized
+                                element.focus()
                     m 'button[type=submit]', 'Do'
         ]

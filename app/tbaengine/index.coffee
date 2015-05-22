@@ -12,9 +12,14 @@ module.exports = class Engine
         @commandWords = []
         @message = ''
 
+        @callbacks = []
+        @startRoom = ''
+
+    setStartRoom: (roomName) ->
+        @startRoom = roomName
+
     save: ->
         localStorage.setItem 'progress', JSON.stringify({
-            rooms: @rooms
             inventory: @inventory
             currentRoomName: @currentRoomName
         })
@@ -22,19 +27,19 @@ module.exports = class Engine
     load: ->
         try
             data = JSON.parse(localStorage.getItem('progress'))
-            @rooms = data.rooms
             @inventory = data.inventory
             @currentRoomName = data.currentRoomName
-        sr23's 38u ds ha,sr3c ka23srcs2983 as482'r9 9s8 3asu
-            @rooms = {}
-            @flags = {}
-            @inventory = data.inventory
-            @currentRoomName = data.currentRoomName
+            return true
+        catch
+            localStorage.clear()
+            return false
 
     addRoom: (roomName, callback) ->
         @rooms[roomName] = callback.bind(@)
 
     getCurrentRoomName: -> @currentRoomName
+
+    getCurrentMessage: -> @message
 
     getInventory: -> JSON.parse(JSON.stringify(@inventory))
 
@@ -56,37 +61,47 @@ module.exports = class Engine
         @rooms[@currentRoomName]()
 
     matches: (pattern) ->
-        # determine if this is a match
-        for command, payload of commandHash
-            isMatch = true
-
-            specCommandWords = parseCommandIntoWords(command)
-
-            # If each word in the spec command is found anywhere in the user's input
-            # it's a match
-            for specWord in specCommandWords
-                if not (specWord in words)
-                    isMatch = false
-                    break
-
-            if isMatch
-                #for condition in payload.conditions
-                for action in payload.results
-                    [__, action, argument] = action.match(/^(.*)\((.*)\)$/)
-                    actions[action](argument)
-
-                    # If you move to a new room, automatically 'look'
-                    if action == 'goToRoom'
-                        doCommand('look')
-                
-                foundCommandInRoom = true
-                return true
-        return false
+        # If each word in the spec command is found
+        # anywhere in the user's input it's a match
+        patternWords = pattern.split(' ')
+        for patternWord in patternWords
+            if not (patternWord in @commandWords)
+                return false
+        return true
 
     hasItem: (item) -> item of @inventory
+    usedItem: (item) -> item of @inventory and @inventory[item] == 'used'
+
     percentChance: (chance) -> Math.random() < chance / 100
+
     flagIs: (flagName, value) -> @flags[flagName] == value
 
-    print: (text) -> @message = text
-    goToRoom: (roomName) -> @currentRoomName = roomName
-    setFlag: (flagName, value) -> @flags[flagName] = value
+    print: (text) ->
+        @message = text
+        @notify()
+
+    goToRoom: (roomName) ->
+        @currentRoomName = roomName
+        @doCommand('look')
+        @notify()
+
+    goToStart: ->
+        @currentRoomName = @startRoom
+        @doCommand('look')
+        @notify()
+
+    setFlag: (flagName, value) ->
+        @flags[flagName] = value
+        @notify()
+
+    getItem: (item) ->
+        @inventory[item] = 'gotten'
+        @notify()
+
+    useItem: (item) ->
+        @inventory[item] = 'used'
+        @notify()
+
+    listen: (callback) -> @callbacks.push(callback)
+
+    notify: -> callback() for callback in @callbacks
