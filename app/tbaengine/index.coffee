@@ -4,6 +4,8 @@ synonymData = require('./synonyms')
 module.exports = class Engine
     constructor: ->
         @rooms = {}
+        @universalCommands = ->
+        @afterCommand = ->
 
         @inventory = {}
         @currentRoomName = ''
@@ -17,6 +19,9 @@ module.exports = class Engine
 
     setStartRoom: (roomName) ->
         @startRoom = roomName
+
+    setAfterCommand: (callback) ->
+        @afterCommand = callback.bind(@)
 
     save: ->
         localStorage.setItem 'progress', JSON.stringify({
@@ -59,6 +64,13 @@ module.exports = class Engine
         @commandWords = commandText.split(' ')
 
         @rooms[@currentRoomName]()
+        @afterCommand()
+
+    setUniversalCommands: (callback) ->
+        @universalCommands = callback.bind(@)
+
+    tryUniversalCommands: ->
+        @universalCommands()
 
     matches: (pattern) ->
         # If each word in the spec command is found
@@ -96,6 +108,10 @@ module.exports = class Engine
 
     getItem: (item) ->
         @inventory[item] = 'gotten'
+        @notify()
+
+    removeItem: (item) ->
+        delete @inventory[item]
         @notify()
 
     useItem: (item) ->

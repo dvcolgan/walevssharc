@@ -15,7 +15,7 @@ module.exports =
         'grasp'
         'obtain'
         'buy'
-        'ask'
+        'choose'
     ]
     go: [
         'walk'

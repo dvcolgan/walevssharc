@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/dcolgan/projects/walevssharc/app/main.coffee":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var engine, m, view;
 
 m = require('mithril');
@@ -11,7 +11,7 @@ m.mount(document.body, view);
 
 
 
-},{"app/engine":"/home/dcolgan/projects/walevssharc/node_modules/app/engine.coffee","app/view":"/home/dcolgan/projects/walevssharc/node_modules/app/view.coffee","mithril":"/home/dcolgan/projects/walevssharc/node_modules/mithril/mithril.js"}],"/home/dcolgan/projects/walevssharc/node_modules/app/engine.coffee":[function(require,module,exports){
+},{"app/engine":2,"app/view":5,"mithril":7}],2:[function(require,module,exports){
 var TextBasedAdventureEngine;
 
 TextBasedAdventureEngine = require('app/tbaengine');
@@ -20,7 +20,7 @@ module.exports = new TextBasedAdventureEngine();
 
 
 
-},{"app/tbaengine":"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/index.coffee"}],"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/index.coffee":[function(require,module,exports){
+},{"app/tbaengine":3}],3:[function(require,module,exports){
 var Engine, synonymData,
   indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -29,6 +29,8 @@ synonymData = require('./synonyms');
 module.exports = Engine = (function() {
   function Engine() {
     this.rooms = {};
+    this.universalCommands = function() {};
+    this.afterCommand = function() {};
     this.inventory = {};
     this.currentRoomName = '';
     this.flags = {};
@@ -40,6 +42,10 @@ module.exports = Engine = (function() {
 
   Engine.prototype.setStartRoom = function(roomName) {
     return this.startRoom = roomName;
+  };
+
+  Engine.prototype.setAfterCommand = function(callback) {
+    return this.afterCommand = callback.bind(this);
   };
 
   Engine.prototype.save = function() {
@@ -89,7 +95,16 @@ module.exports = Engine = (function() {
       }
     }
     this.commandWords = commandText.split(' ');
-    return this.rooms[this.currentRoomName]();
+    this.rooms[this.currentRoomName]();
+    return this.afterCommand();
+  };
+
+  Engine.prototype.setUniversalCommands = function(callback) {
+    return this.universalCommands = callback.bind(this);
+  };
+
+  Engine.prototype.tryUniversalCommands = function() {
+    return this.universalCommands();
   };
 
   Engine.prototype.matches = function(pattern) {
@@ -147,6 +162,11 @@ module.exports = Engine = (function() {
     return this.notify();
   };
 
+  Engine.prototype.removeItem = function(item) {
+    delete this.inventory[item];
+    return this.notify();
+  };
+
   Engine.prototype.useItem = function(item) {
     this.inventory[item] = 'used';
     return this.notify();
@@ -173,10 +193,10 @@ module.exports = Engine = (function() {
 
 
 
-},{"./synonyms":"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/synonyms.coffee"}],"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/synonyms.coffee":[function(require,module,exports){
+},{"./synonyms":4}],4:[function(require,module,exports){
 module.exports = {
   look: ['see', 'admire', 'behold', 'gawk', 'observe', 'spy'],
-  take: ['pick up', 'get', 'acquire', 'grab', 'grasp', 'obtain', 'buy', 'ask'],
+  take: ['pick up', 'get', 'acquire', 'grab', 'grasp', 'obtain', 'buy', 'choose'],
   go: ['walk', 'perambulate', 'flee', 'leave', 'move', 'travel', 'depart', 'decamp', 'exit', 'journey', 'mosey', 'withdraw'],
   give: ['deliver', 'donate', 'hand over', 'present', 'endow', 'bequeath', 'bestow', 'relinquish'],
   garden: ['plot', 'plants', 'produce']
@@ -184,7 +204,7 @@ module.exports = {
 
 
 
-},{}],"/home/dcolgan/projects/walevssharc/node_modules/app/view.coffee":[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var TextTyper, WaleVsSharc, engine, m,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -226,7 +246,6 @@ TextTyper = (function() {
     if (message !== this.currentMessage) {
       this.currentMessage = message;
       this.typer = new this.makeTyper(message);
-      window.speechSynthesis.speak(new SpeechSynthesisUtterance(message));
       return m.redraw();
     }
   };
@@ -286,35 +305,43 @@ module.exports = {
       m('.sidebar', {
         style: {
           height: window.innerHeight + 'px',
-          width: '160px',
+          width: '260px',
           padding: '20px'
         }
       }, m('h2', {
         style: {
           marginTop: 0
         }
-      }, 'Inventory'), (function() {
-        var ref, results;
-        ref = engine.getInventory();
-        results = [];
-        for (itemName in ref) {
-          state = ref[itemName];
-          if (state === 'gotten') {
-            results.push(m('p', itemName));
-          } else if (state === 'used') {
-            results.push(m('p', {
-              style: {
-                textDecoration: 'line-through'
-              }
-            }, itemName));
-          } else {
-            results.push(void 0);
+      }, 'Inventory'), [
+        (function() {
+          var ref, results;
+          ref = engine.getInventory();
+          results = [];
+          for (itemName in ref) {
+            state = ref[itemName];
+            if (state === 'gotten') {
+              results.push(m('p', itemName));
+            } else if (state === 'used') {
+              results.push(m('p', {
+                style: {
+                  textDecoration: 'line-through'
+                }
+              }, itemName));
+            } else {
+              results.push(void 0);
+            }
           }
-        }
-        return results;
-      })()), m('.content', {
+          return results;
+        })(), m('button', {
+          onclick: function() {
+            localStorage.clear();
+            alert('Save game deleted');
+            return window.location.href = '';
+          }
+        }, 'Restart game')
+      ]), m('.content', {
         style: {
-          width: (window.innerWidth - 260) + 'px',
+          width: (window.innerWidth - 360) + 'px',
           padding: '20px',
           paddingTop: 0
         }
@@ -338,19 +365,55 @@ module.exports = {
 
 
 
-},{"app/engine":"/home/dcolgan/projects/walevssharc/node_modules/app/engine.coffee","app/walevssharc":"/home/dcolgan/projects/walevssharc/node_modules/app/walevssharc.coffee","mithril":"/home/dcolgan/projects/walevssharc/node_modules/mithril/mithril.js"}],"/home/dcolgan/projects/walevssharc/node_modules/app/walevssharc.coffee":[function(require,module,exports){
+},{"app/engine":2,"app/walevssharc":6,"mithril":7}],6:[function(require,module,exports){
 "Conditions:\n    @matches(pattern)\n    @hasItem(item name)\n    @percentChance(chance out of 100)\n    @flagIs(flag name, value)\n\nResults:\n    @print(text)\n    @goToRoom(room name)\n    @setFlag(flag name, value)";
 module.exports = function(engine) {
+  var costumeMatches, removeAllCostumeItems;
+  engine.setUniversalCommands(function() {
+    var i, invStr, item, len, ref;
+    if (this.matches('die')) {
+      return this.print('What are you doing? You are dead now.');
+    } else if (this.matches('win')) {
+      return this.print('You did it. You win. Buy yourself a pizza because you are so clever.');
+    } else if (this.matches('inv') || this.matches('inventory') || this.matches('items')) {
+      invStr = 'Your inventory includes ';
+      ref = this.getInventory();
+      for (i = 0, len = ref.length; i < len; i++) {
+        item = ref[i];
+        invStr += 'a ' + item + ',';
+      }
+      return this.print(invStr);
+    }
+  });
+  engine.setAfterCommand(function() {
+    if (!this.flagIs('have_all_items', true) && this.hasItem('egg') && this.hasItem('flowers') && this.hasItem('can of soda') && this.hasItem('soda syrup') && this.hasItem('manatee milk') && this.hasItem('margarine')) {
+      this.print('"Well, I think I have all the ingredients," you say to yourself. "I just need one of those places where you put them together so it turns into something you can eat. You know, one of those...food preparing rooms."');
+      return this.setFlag('have_all_items', true);
+    }
+  });
   engine.addRoom('Ocean', function() {
     if (this.matches('look')) {
       return this.print('You find yourself in the ocean. You are a shark by the name of Sharc and your $23 shampoo is missing. You suspect foul play. Welcome to the ocean, it is a big blue wet thing and also your home. Obvious exits are North to your friend Wale.');
     } else if (this.matches('go north')) {
       return this.goToRoom('Wale');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Wale', function() {
     if (this.matches('look')) {
       return this.print('Hey, it is your friend, Wale. He is doing that thing where he has his eyes closed and acts like he did not notice your arrival. He is kind of a prick, but also your friend. What can you do? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.');
+    } else if (this.matches('give pancakes')) {
+      if (this.hasItem('pancakes')) {
+        this.print('"Hey Wale," you call out as intrusively as possible, "I got your--" Before you could finish your sentence, your blubbery friend has snatched the plate away and, in a most undignified manner, begins mowing through the fried discs you so artfully prepared. "Soul searching takes a lot of energy," he explains between bites. "I haven\'t eaten anything all day." Once finished, Wale straightens himself out, looking a mite embarrassed for the savage display he just put on. "What was it you needed?" "Oh Wale, it\'s terrible. I think my $23 shampoo was stolen and the ghost of my not really dead friend says the fate of the world hangs in the balance." "I see," says Wale, his voice and manner remaining unchanged despite the threat of the world unbalancing. "Sharc, I fear the worst. You must summon the ethereal door." "No, Wale," you say, "you made me swear a thousand vows never to bring that cursed relic back among us." "I know what I said, but I also knew there would come a time when we would have no other choice."  You should probably summon the door.');
+        this.removeItem('pancakes');
+        return this.setFlag('given_pancakes', true);
+      }
+    } else if (this.matches('summon door') && this.flagIs('given_pancakes', true)) {
+      this.print('You, finally convinced of your urgency and utter desperation, perform some intricate rites and incantations that would be really cool if you could see them, but I guess you will just have to use your imaginations. Text only fools!  The ethereal door stands open before you.');
+      return this.setFlag('summoned_door', true);
+    } else if (this.matches('enter door') && this.flagIs('summoned_door', true)) {
+      return this.goToRoom('The Ethereal Realm');
     } else if (this.matches('talk wale')) {
       if (this.flagIs('talked_to_wale', true)) {
         this.print('(Get ready to do some reading) Wale is trying to meditate or something pretentious that you don\'t care about. You have something important! "Wale" you shout, "I need your help! The condition of my magnificent scalp is at stake." Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. Pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.');
@@ -366,6 +429,8 @@ module.exports = function(engine) {
       return this.goToRoom('Cuttlefish');
     } else if (this.matches('go east')) {
       return this.goToRoom('Billy Ocean');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Wetter Ocean', function() {
@@ -377,6 +442,8 @@ module.exports = function(engine) {
       return this.goToRoom('Achtipus\'s Garden');
     } else if (this.matches('go east')) {
       return this.goToRoom('Seal or No Seal');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Cuttlefish', function() {
@@ -399,6 +466,8 @@ module.exports = function(engine) {
       return this.goToRoom('Achtipus\'s Garden');
     } else if (this.matches('go west')) {
       return this.goToRoom('Steak and Shake');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Billy Ocean', function() {
@@ -408,27 +477,30 @@ module.exports = function(engine) {
     } else if (this.matches('talk')) {
       return this.print('He wants you to get into his car and drive him to the hospital. He just drove through the car wash with the top down after dropping some acid.');
     } else if (this.matches('hospital')) {
-      return this.print('Sure, why not? You get in the driver\'s seat and find your way to the nearest medical treatment center. As thanks, Mr. Ocean pulls an egg out from his glove box. You accept and swim away as fast as possible. Good, I ran out of jokes for that fast.');
+      this.print('Sure, why not? You get in the driver\'s seat and find your way to the nearest medical treatment center. As thanks, Mr. Ocean pulls an egg out from his glove box. You accept and swim away as fast as possible. Good, I ran out of jokes for that fast.');
+      return this.getItem('egg');
     } else if (this.matches('call cops')) {
       return this.print('The police come and arrest Billy Ocean on charge of being completely irrelevant to this game. You Win! High Score.');
     } else if (this.matches('go west')) {
       return this.goToRoom('Wale');
     } else if (this.matches('go north')) {
       return this.goToRoom('Seal or No Seal');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Achtipus\'s Garden', function() {
     if (this.matches('look achtipus')) {
       return this.print('It\'s Achtipus. He is pulling out the seaweeds from his sea cucumber bed.');
+    } else if (this.matches('look garden')) {
+      return this.print('You see watermelon, water chestnuts, assorted flowers, sea cucumbers and strawberries.');
     } else if (this.matches('look')) {
       return this.print('Achtipus is working among his flowers and shrubs. He sees you and opens the gate for you. Obvious exits are north to Water World, east to some Ocean and south to a school of Cuttlefish.');
     } else if (this.matches('talk')) {
       return this.print('"This is quite the um...ocean hideaway you have here," you say. "Yes," he says, "I can see you have come a long way to get here, but I am glad you have found refuge on my grounds. If you see anything you like in my plot we could make a deal perhaps."');
-    } else if (this.matches('look garden')) {
-      return this.print('You see watermelon, water chestnuts, assorted flowers, sea cucumbers and strawberries.');
     } else if (this.matches('take watermelon')) {
       return this.print('"I will give you the watermelon in exchange for an ice cream sundae."');
-    } else if (this.matches('take nuts') || this.matches('take nut')(this.matches('take chestnuts') || this.matches('take chestnut'))) {
+    } else if (this.matches('take nuts') || this.matches('take nut') || this.matches('take chestnuts') || this.matches('take chestnut')) {
       return this.print('"I will give you some water chestnuts if you can find me a pure bred German Shepard."');
     } else if (this.matches('take cucumber') || this.matches('take cucumbers')) {
       return this.print('"You can have the sea cucumbers in exchange for a full pardon for these major felony charges that are still pending."');
@@ -450,6 +522,8 @@ module.exports = function(engine) {
       return this.goToRoom('Wetter Ocean');
     } else if (this.matches('go south')) {
       return this.goToRoom('Cuttlefish');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Steak and Shake', function() {
@@ -459,6 +533,8 @@ module.exports = function(engine) {
       return this.goToRoom('Steak and Shake (Doorway)');
     } else if (this.matches('go east')) {
       return this.goToRoom('Cuttlefish');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Steak and Shake (Doorway)', function() {
@@ -472,15 +548,283 @@ module.exports = function(engine) {
       return this.goToRoom('Steak and Shake (Soda Fountain)');
     } else if (this.matches('go east')) {
       return this.goToRoom('Steak and Shake');
+    } else {
+      return this.tryUniversalCommands();
     }
   });
   engine.addRoom('Steak and Shake (Kitchen)', function() {
     if (this.matches('look')) {
       return this.print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.');
     } else if (this.matches('look oven') || this.matches('open oven')) {
-      return this.print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?');
+      this.print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?');
+      return this.getItem('can of soda');
+    } else if (this.flagIs('have_all_items', true)) {
+      if (this.matches('make pancakes')) {
+        this.print('In the interest of making the game playable asap, I\'ll put this is after getting it up online.  Have some pancakes.');
+        this.getItem('pancakes');
+        this.removeItem('egg');
+        this.removeItem('manatee milk');
+        this.removeItem('flowers');
+        this.removeItem('can of soda');
+        this.removeItem('soda syrup');
+        return this.removeItem('margarine');
+      }
     } else if (this.matches('go south')) {
       return this.goToRoom('Steak and Shake (Doorway)');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Steak and Shake (Soda Fountain)', function() {
+    if (this.matches('look')) {
+      return this.print('You see that the soda fountain has somehow remained largely undamaged. You think back to the days when you would sneak out bags of plain syrup to drink and the freakish waking dreams it would induce in you. You wonder if there is any still in there.');
+    } else if (this.matches('look fountain') || this.matches('open fountain') || this.matches('look soda') || this.matches('open soda')) {
+      return this.print('Avast, a hidden treasure trove of sugary wonder that has lain dormant all these years! You tremble at the beauty of the sight before you. So many bags and yet your magic hammerspace satchel will only allow for one. There\'s Spritz, Professor Ginger, Cactus Lager, and Ms. Shim Sham\'s Maple Soda.');
+    } else if (this.matches('take maple')) {
+      this.print('You find it shocking that you are the first raider of this soda tomb. But then again, you have always said people don\'t know the value of a bag of liquid sugar. You take off with it under cover of darkness.');
+      return this.getItem('soda syrup');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Steak and Shake (Doorway)');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Seal or No Seal', function() {
+    if (this.matches('look')) {
+      return this.print('You just walked onto the set of the wildly popular game show, "Seal or No Seal!" Where flamboyant contestants flail around and shout while trying to arrive at the answer to that age old question...SEAL OR NO SEAL? To the east is backstage, north will take you to the dressing room, west or south will take you back wherever you came from.');
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Seal or No Seal (Dressing Room)');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Seal or No Seal (Backstage)');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Wetter Ocean');
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Billy Ocean');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Seal or No Seal (Dressing Room)', function() {
+    var done, step1, step2, step3;
+    step1 = 'Let\'s start with headgear. You see a cowboy hat, a rainbow wig, a motorcycle helmet, and a stovepipe hat.';
+    step2 = 'Now select a set of clothes. You see a leather jacket, a clown suit, an oldtimey suit with one of those Colonel Sanders ties, and a cow print vest.';
+    step3 = 'Accessorize! Pick from a fake beard, a gun belt, a metal chain, and a rubber chicken.';
+    done = 'You look absolutely horrible! Or amazing, depending on your perspective. But the true judge will be the game show manager.';
+    if (this.matches('look')) {
+      return this.print('This place is great! It would be easy to cobble together a costume to get on that show. Lets see what we can find. Obvious exits are south to the show entrance.');
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Seal or No Seal');
+    } else if (this.matches('costume')) {
+      return this.print(step1);
+    } else if (this.matches('take cowboy hat')) {
+      this.getItem('cowboy hat');
+      return this.print(step2);
+    } else if (this.matches('take rainbow wig')) {
+      this.getItem('rainbow wig');
+      return this.print(step2);
+    } else if (this.matches('take motorcycle helmet')) {
+      this.getItem('motorcycle helmet');
+      return this.print(step2);
+    } else if (this.matches('take stovepipe hat')) {
+      this.getItem('stovepipe hat');
+      return this.print(step2);
+    } else if (this.matches('take leather jacket')) {
+      this.getItem('leather jacket');
+      return this.print(step3);
+    } else if (this.matches('take clown suit')) {
+      this.getItem('clown suit');
+      return this.print(step3);
+    } else if (this.matches('take oldtimey suit')) {
+      this.getItem('oldtimey suit');
+      return this.print(step3);
+    } else if (this.matches('take cow vest') || this.matches('take print vest')) {
+      this.getItem('cow print vest');
+      return this.print(step3);
+    } else if (this.matches('take fake beard')) {
+      this.getItem('fake beard');
+      return this.print(done);
+    } else if (this.matches('take gun belt')) {
+      this.getItem('gun belt');
+      return this.print(done);
+    } else if (this.matches('take metal chain')) {
+      this.getItem('metal chain');
+      return this.print(done);
+    } else if (this.matches('take rubber chicken')) {
+      this.getItem('rubber chicken');
+      return this.print(done);
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  costumeMatches = function(engine) {
+    debugger;
+    var group1, group2, group3, group4;
+    group1 = 0;
+    group2 = 0;
+    group3 = 0;
+    group4 = 0;
+    if (engine.hasItem('cowboy hat')) {
+      group1++;
+    }
+    if (engine.hasItem('rainbow wig')) {
+      group1++;
+    }
+    if (engine.hasItem('motorcycle helmet')) {
+      group1++;
+    }
+    if (engine.hasItem('stovepipe hat')) {
+      group1++;
+    }
+    if (engine.hasItem('leather jacket')) {
+      group2++;
+    }
+    if (engine.hasItem('clown suit')) {
+      group2++;
+    }
+    if (engine.hasItem('oldtimey suit')) {
+      group2++;
+    }
+    if (engine.hasItem('cow print vest')) {
+      group2++;
+    }
+    if (engine.hasItem('gun belt')) {
+      group3++;
+    }
+    if (engine.hasItem('rubber chicken')) {
+      group3++;
+    }
+    if (engine.hasItem('fake beard')) {
+      group3++;
+    }
+    if (engine.hasItem('metal chain')) {
+      group3++;
+    }
+    return Math.max(group1, group2, group3, group4);
+  };
+  removeAllCostumeItems = function(engine) {
+    engine.removeItem('cowboy hat');
+    engine.removeItem('rainbow wig');
+    engine.removeItem('motorcycle helmet');
+    engine.removeItem('stovepipe hat');
+    engine.removeItem('leather jacket');
+    engine.removeItem('clown suit');
+    engine.removeItem('oldtimey suit');
+    engine.removeItem('cow print vest');
+    engine.removeItem('gun belt');
+    engine.removeItem('rubber chicken');
+    engine.removeItem('fake beard');
+    return engine.removeItem('metal chain');
+  };
+  engine.addRoom('Seal or No Seal (Backstage)', function() {
+    if (this.matches('look')) {
+      return this.print('This is the stage. It is just as stupid looking as the rest of the show. Obvious exits are west to the show\'s entrance. The show manager stares at you questioningly.');
+    } else if (this.matches('talk manager')) {
+      switch (costumeMatches(this)) {
+        case 0:
+          return this.print('The show manager apologizes, "I am sorry sir, you look like a decent kind of person, and I\'m afraid we have no place for that on television. Maybe if you came back dressed like a maniac we could work something out.');
+        case 3:
+          this.print('The show manager looks you over, noticing good taste, your knack for flair and attention to detail. He declares "Well, I appreciate you taking time to assemble the costume, but it is just a bit too orderly. You really aren\'t what we are looking for."');
+          return removeAllCostumeItems(this);
+        case 2:
+          this.print('The show manager looks pleased, yet a touch troubled. "You look to be a man going in the right direction, but we only select the best of the best for Seal or no Seal. Your costume is not quite ready for the big show yet.');
+          return removeAllCostumeItems(this);
+        case 1:
+          alert('"Oh, wow!" Exclaims the show manager. "You look absolutely awful. You definitely have the look for our show." You start to dance around, whooping and hollering, declaring yourself the future king of the world. "And I see you have the charisma to match." He turns to his assistant, "Get this fella on stage at once.');
+          return this.goToRoom('Seal or No Seal (On Stage!)');
+      }
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Seal or No Seal');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Seal or No Seal (On Stage!)', function() {
+    if (this.matches('look')) {
+      return this.print('"Welcome back to the Seal or No Seal, the most popular game show under the sea! I\'m your well tanned host Jerry Zintervanderbinderbauer Jr. Let\'s meet our next contestant: Sharc! An incredibly obnoxious yet persuasive young ocean dweller, he loves annoying his friends and is always up for a round of Scrabble, LADIES. Time to get started. Now, Sharc I am going to present you with a briefcase. In this briefcase, there might be a seal or there might not be a seal. And I need you to tell me which it is: SEAL or NO SEAL?"');
+    } else if (this.matches('no seal')) {
+      alert('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then, wearing a face of practiced disappointment and empathy, whimpers "Too bad," letting the case open the rest of the way. At this, you are promptly ushered off the stage to make way for the next sucker.');
+      removeAllCostumeItems(this);
+      return this.goToRoom('Seal or No Seal (Backstage)');
+    } else if (this.matches('seal')) {
+      alert('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then excitedly pulls it all the way open. "He\'s right people! Now, let\'s see your prizes." "Prizes is right Jerry," says a voice coming from nowhere and everywhere all at once. "Here are some world class selections I picked up from the grocery store on the way here this morning: Success comes in cans, not in can nots. Tin cans that is! That\'s why we are offering you the choice of a full week\'s supply of \'Captain Ned\'s Pickled Herring\', or \'No Ifs Ands or Butter\' brand margarine spread product for your consumption pleasure.  Naturally you choose the margarine because you are health conscious or something.');
+      removeAllCostumeItems(this);
+      this.getItem('margarine');
+      return this.goToRoom('Seal or No Seal (Backstage)');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Water World', function() {
+    if (this.matches('look')) {
+      return this.print('Oh man, Water World! You love that movie. Kevin Costner should have totally gotten the Oscar. Wait this isn\'t like that. This is Water World, the home of that stupid killer whale, Shampu. What a hack! Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.');
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Water World (Manatee Exhibit)');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Water World (Gift Shop)');
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Achtipus\'s Garden');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Water World (Manatee Exhibit)', function() {
+    if (this.matches('look')) {
+      return this.print('And there it is: The illustrious manatee. You can see why the stands are empty. There are big umbrellas attached to some picnic tables; not much to see. Obvious exits are west to the Manatee service room and south to the park entrance.');
+    } else if (this.matches('take umbrella')) {
+      this.getItem('umbrella');
+      return this.print('Well, okay. You now have an umbrella.');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Water World (Mechanical Room Type Place)');
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Water World');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Water World (Gift Shop)', function() {
+    if (this.matches('look')) {
+      return this.print('You enter the Water World gift shop. There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? East to the park entrance.');
+    } else if (this.matches('take badge') || this.matches('take sheriff') || this.matches('take sticker') || this.matches('take stickers')) {
+      this.getItem('badge sticker');
+      return this.print('You take the junior marine sheriff badge stickers to the counter. The cashier says they are on sale, only 15 fish dollars, plus tax. Yussss. You pay the man.');
+    } else if (this.matches('take')) {
+      return this.print('You take that item to the counter. The cashier says it is ' + (18 + Math.floor(Math.random() * 30)).toString() + ' fish dollars but you only have 17 fish dollars. Nuts.');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Water World');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('Water World (Mechanical Room Type Place)', function() {
+    if (this.matches('look')) {
+      return this.print('What in the name of Captain Nemo is this? There are manatees in hoists all over the room hooked up to...milking devices. This is no mechanical room! It\'s a cover for a secret, illegal, underground, black market, but probably organic, sea cow milking operation. The fiends! You are going to blow the lid off this thing for sure. The sweaty old fish running the machinery has not noticed you yet. Obvious exits are east to the manatee exhibit.');
+    } else if (this.matches('talk')) {
+      if (!this.hasItem('badge sticker')) {
+        return this.print('You swim up to the fish at the controls. "I am going to shut you down!" You shout at him. He laughs heartily. "You don\'t stand a chance. You\'re just a regular guy. I\'m the mayor of Water World. Who is going to believe you?" He goes back to his work paying you no mind. He has a point.');
+      } else {
+        this.print('You swim up to the fish brandishing your badge sticker. "You are under arrest for illegal milk harvesting from endangered manatees. I\'m taking you in." "Wait," he says, "You don\'t have to do this. It\'s the only way I can keep Water World running. Don\'t you see? Now that we are on our sixth Shampu, people just don\'t seem to care about the magic of exploited marine mammals. I will, uh...make it worth your while though." He slides a fresh bottle of milk in your direction. Without looking at you he says, "It is worth thousands in the right market."');
+        return this.getItem('manatee milk');
+      }
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Water World (Manatee Exhibit)');
+    } else {
+      return this.tryUniversalCommands();
+    }
+  });
+  engine.addRoom('The Ethereal Realm', function() {
+    if (this.matches('look')) {
+      return this.print('You have entered The Ethereal Realm. Why did you do that? That was a bad decision. Wale is at your side. There are a bunch of weird, spacey platforms and junk floating around in a cosmic void -- your typical surrealist dreamscape environment. Ahead is an ugly monster. He is clutching something in his hand. Obvious exits are NONE! This is the world of waking nightmares you dingus.');
+    } else if (this.matches('talk monster')) {
+      return this.print('You are getting worse at this game. You approach said monster in an effort to get some leads on your precious hair product. Maybe next time start by asking him about the status of the local basketball team or something? On closer examination though, you realize this not just any monster. It is a Torumekian hyper goblin. And in his grisly paw rests the item of your quest, your $23 shampoo. "Sharc, we can not allow him to use that shampoo," whispers your companion. "On the head of a hyper goblin, hair that smooth could mean the end of fashion as we know it. We must retrieve it by any means necessary." No sooner have the words left Wale\'s lips that you are spotted. That is all the motivation this beast needs. He flips the cap on the bottle, raising it to the filthy, string-like mop you can only assume must be his hair, all the while gazing down at you in defiance with his single blood shot eye. Do something!');
+    } else if (this.matches('attack')) {
+      return this.print('You start to lunge towards the creature, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.  "Now Sharc!", he wheezes, "Use the power of the Quadratic Eye." "But you said I wasn\'t ready!" you cry, trying not to look at the sorry state of your friend. "No, it was I who was not ready. The p-power has always been within y-you." You feel a lump in your pocket. Reaching in, you pull out the Quadratic Eye.');
+    } else if (this.matches('use quadratic eye')) {
+      return this.goToRoom('End');
+    }
+  });
+  engine.addRoom('End', function() {
+    if (this.matches('look')) {
+      return this.print('You remove the Quadratic Eye from its compartment, close your eyes and allow union between your spirit and the universal chi flow. Then the goblin gets cut in half and you get your shampoo back.');
     }
   });
   return engine.setStartRoom('Ocean');
@@ -488,7 +832,7 @@ module.exports = function(engine) {
 
 
 
-},{}],"/home/dcolgan/projects/walevssharc/node_modules/mithril/mithril.js":[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var m = (function app(window, undefined) {
 	var OBJECT = "[object Object]", ARRAY = "[object Array]", STRING = "[object String]", FUNCTION = "function";
 	var type = {}.toString;
@@ -1649,4 +1993,4 @@ var m = (function app(window, undefined) {
 if (typeof module != "undefined" && module !== null && module.exports) module.exports = m;
 else if (typeof define === "function" && define.amd) define(function() {return m});
 
-},{}]},{},["/home/dcolgan/projects/walevssharc/app/main.coffee"]);
+},{}]},{},[1]);

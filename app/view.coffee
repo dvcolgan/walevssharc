@@ -27,7 +27,6 @@ class TextTyper
         if message != @currentMessage
             @currentMessage = message
             @typer = new @makeTyper(message)
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(message))
             m.redraw()
 
     getTypingMessage: -> if @typer? then @typer() else ''
@@ -66,25 +65,33 @@ module.exports =
             m '.sidebar',
                 style:
                     height: window.innerHeight + 'px'
-                    width: '160px'
+                    width: '260px'
                     padding: '20px'
                 m 'h2',
                     style:
                         marginTop: 0
                     'Inventory'
-                for itemName, state of engine.getInventory()
-                    if state == 'gotten'
-                        m 'p',
-                            itemName
-                    else if state == 'used'
-                        m 'p',
-                            style:
-                                textDecoration: 'line-through'
-                            itemName
+                [
+                    for itemName, state of engine.getInventory()
+                        if state == 'gotten'
+                            m 'p',
+                                itemName
+                        else if state == 'used'
+                            m 'p',
+                                style:
+                                    textDecoration: 'line-through'
+                                itemName
+                    m 'button',
+                        onclick: ->
+                            localStorage.clear()
+                            alert('Save game deleted')
+                            window.location.href = ''
+                        'Restart game'
+                ]
 
             m '.content',
                 style:
-                    width: (window.innerWidth - 260) + 'px'
+                    width: (window.innerWidth - 360) + 'px'
                     padding: '20px'
                     paddingTop: 0
                 m 'h1', engine.getCurrentRoomName()
