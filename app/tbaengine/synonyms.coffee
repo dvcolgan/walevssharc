@@ -14,6 +14,8 @@ module.exports =
         'grab'
         'grasp'
         'obtain'
+        'buy'
+        'ask'
     ]
     go: [
         'walk'
@@ -38,4 +40,9 @@ module.exports =
         'bequeath'
         'bestow'
         'relinquish'
+    ]
+    garden: [
+        'plot'
+        'plants'
+        'produce'
     ]

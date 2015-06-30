@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/dcolgan/projects/walevssharc/app/main.coffee":[function(require,module,exports){
 var engine, m, view;
 
 m = require('mithril');
@@ -11,7 +11,7 @@ m.mount(document.body, view);
 
 
 
-},{"app/engine":2,"app/view":5,"mithril":7}],2:[function(require,module,exports){
+},{"app/engine":"/home/dcolgan/projects/walevssharc/node_modules/app/engine.coffee","app/view":"/home/dcolgan/projects/walevssharc/node_modules/app/view.coffee","mithril":"/home/dcolgan/projects/walevssharc/node_modules/mithril/mithril.js"}],"/home/dcolgan/projects/walevssharc/node_modules/app/engine.coffee":[function(require,module,exports){
 var TextBasedAdventureEngine;
 
 TextBasedAdventureEngine = require('app/tbaengine');
@@ -20,7 +20,7 @@ module.exports = new TextBasedAdventureEngine();
 
 
 
-},{"app/tbaengine":3}],3:[function(require,module,exports){
+},{"app/tbaengine":"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/index.coffee"}],"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/index.coffee":[function(require,module,exports){
 var Engine, synonymData,
   indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -173,17 +173,18 @@ module.exports = Engine = (function() {
 
 
 
-},{"./synonyms":4}],4:[function(require,module,exports){
+},{"./synonyms":"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/synonyms.coffee"}],"/home/dcolgan/projects/walevssharc/node_modules/app/tbaengine/synonyms.coffee":[function(require,module,exports){
 module.exports = {
   look: ['see', 'admire', 'behold', 'gawk', 'observe', 'spy'],
-  take: ['pick up', 'get', 'acquire', 'grab', 'grasp', 'obtain'],
+  take: ['pick up', 'get', 'acquire', 'grab', 'grasp', 'obtain', 'buy', 'ask'],
   go: ['walk', 'perambulate', 'flee', 'leave', 'move', 'travel', 'depart', 'decamp', 'exit', 'journey', 'mosey', 'withdraw'],
-  give: ['deliver', 'donate', 'hand over', 'present', 'endow', 'bequeath', 'bestow', 'relinquish']
+  give: ['deliver', 'donate', 'hand over', 'present', 'endow', 'bequeath', 'bestow', 'relinquish'],
+  garden: ['plot', 'plants', 'produce']
 };
 
 
 
-},{}],5:[function(require,module,exports){
+},{}],"/home/dcolgan/projects/walevssharc/node_modules/app/view.coffee":[function(require,module,exports){
 var TextTyper, WaleVsSharc, engine, m,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -337,57 +338,149 @@ module.exports = {
 
 
 
-},{"app/engine":2,"app/walevssharc":6,"mithril":7}],6:[function(require,module,exports){
+},{"app/engine":"/home/dcolgan/projects/walevssharc/node_modules/app/engine.coffee","app/walevssharc":"/home/dcolgan/projects/walevssharc/node_modules/app/walevssharc.coffee","mithril":"/home/dcolgan/projects/walevssharc/node_modules/mithril/mithril.js"}],"/home/dcolgan/projects/walevssharc/node_modules/app/walevssharc.coffee":[function(require,module,exports){
 "Conditions:\n    @matches(pattern)\n    @hasItem(item name)\n    @percentChance(chance out of 100)\n    @flagIs(flag name, value)\n\nResults:\n    @print(text)\n    @goToRoom(room name)\n    @setFlag(flag name, value)";
 module.exports = function(engine) {
   engine.addRoom('Ocean', function() {
     if (this.matches('look')) {
-      return this.print('Welcome to the ocean, it is a big blue wet thing and also your home.');
-    } else if (this.matches('go west')) {
-      return this.goToRoom('Cuttlefish');
+      return this.print('You find yourself in the ocean. You are a shark by the name of Sharc and your $23 shampoo is missing. You suspect foul play. Welcome to the ocean, it is a big blue wet thing and also your home. Obvious exits are North to your friend Wale.');
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Wale');
+    }
+  });
+  engine.addRoom('Wale', function() {
+    if (this.matches('look')) {
+      return this.print('Hey, it is your friend, Wale. He is doing that thing where he has his eyes closed and acts like he did not notice your arrival. He is kind of a prick, but also your friend. What can you do? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.');
+    } else if (this.matches('talk wale')) {
+      if (this.flagIs('talked_to_wale', true)) {
+        this.print('(Get ready to do some reading) Wale is trying to meditate or something pretentious that you don\'t care about. You have something important! "Wale" you shout, "I need your help! The condition of my magnificent scalp is at stake." Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. Pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.');
+        return this.setFlag('talked_to_wale', true);
+      } else {
+        return this.print('"I can not lift a fin for you until you have brought a healthy serving of whole wheat pancakes with all natural maple syrup like I said before."');
+      }
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Ocean');
     } else if (this.matches('go north')) {
       return this.goToRoom('Wetter Ocean');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Cuttlefish');
     } else if (this.matches('go east')) {
       return this.goToRoom('Billy Ocean');
+    }
+  });
+  engine.addRoom('Wetter Ocean', function() {
+    if (this.matches('look')) {
+      return this.print('This is just some ocean you found. It does feel a little bit wetter than the rest of the ocean though. Also, did it just get warmer? Obvious exits are a garden to the west, Wale in the south, and a gameshow east.');
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Wale');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Achtipus\'s Garden');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Seal or No Seal');
     }
   });
   engine.addRoom('Cuttlefish', function() {
     if (this.matches('look')) {
       if (!this.hasItem('cuttlefish')) {
-        return this.print('Look, there be some cuttlefish, they do not look too cuddly though.');
+        return this.print('Look, there be some cuttlefish, though they do not look too cuddly. Steak and Shake is to the west, Achtipus\'s garden to the north, and Wale to the east.');
       } else {
         return this.print('There used to be cuttlefish here but you scared them away with your aggressive affections. Keep that stuff inside man!');
       }
-    } else if (this.matches('go east')) {
-      return this.goToRoom('Ocean');
     } else if (this.matches('cuddle cuttlefish')) {
       if (!this.hasItem('cuttlefish')) {
-        this.getItem('cuttlefish');
-        return this.print('You are feeling affectionate today and you just got dumped so why not? You jump some of the cuttlefish and start snuggling and cuddling. The cuttlefish are not amused though and say they are tired of fish making that mistake. They all swim away except for one that has attached its suckers to your mid region. You don\'t seem to mind.');
+        this.print('You are feeling affectionate today and you just got dumped so why not? You jump some of the cuttlefish and start snuggling and cuddling. The cuttlefish are not amused though, and say they are tired of fish making that mistake. They all swim away except for one that has attached its suckers to your mid region. You don\'t seem to mind.');
+        return this.getItem('cuttlefish');
       } else {
         return this.print('They are cuddled out.');
       }
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Wale');
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Achtipus\'s Garden');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Steak and Shake');
     }
   });
   engine.addRoom('Billy Ocean', function() {
     if (this.matches('look')) {
-      return this.print('<TODO> Play the video here. Mr. Ocean is gesturing to his car, do you get in?');
-    } else if (this.matches('go west')) {
-      return this.goToRoom('Ocean');
-    } else if (this.matches('enter car')) {
-      this.print('Didn\'t your mother teach you anything?');
-      return this.getItem('unknown item yet to be determined');
-    } else if (this.matches('walk away')) {
-      return this.print('Smart move! You decide not to enter the car of a stranger, that was wise although you are an enormous shark so I don’t know.');
+      window.open('https://www.youtube.com/watch?v=9f16Fw_K45s', '_blank');
+      return this.print('Suddenly, appearing before your eyes is singer-songwriter and former Caribbean king: Billy Ocean. Also Billy Ocean\'s car. Obvious exits are west to Wale and north to some kind of game show.');
+    } else if (this.matches('talk')) {
+      return this.print('He wants you to get into his car and drive him to the hospital. He just drove through the car wash with the top down after dropping some acid.');
+    } else if (this.matches('hospital')) {
+      return this.print('Sure, why not? You get in the driver\'s seat and find your way to the nearest medical treatment center. As thanks, Mr. Ocean pulls an egg out from his glove box. You accept and swim away as fast as possible. Good, I ran out of jokes for that fast.');
     } else if (this.matches('call cops')) {
-      return this.print('The police come and arrest Billy Ocean on charge of being a really lame artist and completely irrelevant to this game. You Win! High Score.');
+      return this.print('The police come and arrest Billy Ocean on charge of being completely irrelevant to this game. You Win! High Score.');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Wale');
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Seal or No Seal');
     }
   });
-  engine.addRoom('Wetter Ocean', function() {
-    if (this.matches('look')) {
-      return this.print('This ocean feels wetter than before.');
+  engine.addRoom('Achtipus\'s Garden', function() {
+    if (this.matches('look achtipus')) {
+      return this.print('It\'s Achtipus. He is pulling out the seaweeds from his sea cucumber bed.');
+    } else if (this.matches('look')) {
+      return this.print('Achtipus is working among his flowers and shrubs. He sees you and opens the gate for you. Obvious exits are north to Water World, east to some Ocean and south to a school of Cuttlefish.');
+    } else if (this.matches('talk')) {
+      return this.print('"This is quite the um...ocean hideaway you have here," you say. "Yes," he says, "I can see you have come a long way to get here, but I am glad you have found refuge on my grounds. If you see anything you like in my plot we could make a deal perhaps."');
+    } else if (this.matches('look garden')) {
+      return this.print('You see watermelon, water chestnuts, assorted flowers, sea cucumbers and strawberries.');
+    } else if (this.matches('take watermelon')) {
+      return this.print('"I will give you the watermelon in exchange for an ice cream sundae."');
+    } else if (this.matches('take nuts') || this.matches('take nut')(this.matches('take chestnuts') || this.matches('take chestnut'))) {
+      return this.print('"I will give you some water chestnuts if you can find me a pure bred German Shepard."');
+    } else if (this.matches('take cucumber') || this.matches('take cucumbers')) {
+      return this.print('"You can have the sea cucumbers in exchange for a full pardon for these major felony charges that are still pending."');
+    } else if (this.matches('take strawberries')) {
+      return this.print('"Oh, actually those strawberry fields aren\'t even real."');
+    } else if (this.matches('take flowers') || this.matches('take flower')) {
+      if (!this.flagIs('given_umbrella', true)) {
+        return this.print('"I can see you like the flowers. I will let you have them if you can find something to keep it from getting so hot here. I would be able to do twice as much work if it were a bit cooler.');
+      } else {
+        this.print('"You have great taste. These flowers are really versatile and will be good just about anywhere."');
+        return this.getItem('flowers');
+      }
+    } else if (this.matches('give umbrella')) {
+      this.print('"This will be perfect for blocking out that sun’s harsh rays. Thanks!"');
+      return this.setFlag('given_umbrella', true);
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Water World');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Wetter Ocean');
     } else if (this.matches('go south')) {
-      return this.goToRoom('Ocean');
+      return this.goToRoom('Cuttlefish');
+    }
+  });
+  engine.addRoom('Steak and Shake', function() {
+    if (this.matches('look')) {
+      return this.print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past. It\'s the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.');
+    } else if (this.matches('go west') || this.matches('open door') || this.matches('go inside') || this.matches('go in')) {
+      return this.goToRoom('Steak and Shake (Doorway)');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Cuttlefish');
+    }
+  });
+  engine.addRoom('Steak and Shake (Doorway)', function() {
+    if (this.matches('look')) {
+      return this.print('As you approach, the door falls clean off as if to warn you against entry. Never being one for omens, you ignore it. Inside you discover things much as you remember them. That is, if they had been mauled by a bear with blenders for hands who proceeded to set off a series of plastic explosives. To the south there are some tables and chairs, north lies the kitchen, and west a soda fountain. The outdoors is east.');
+    } else if (this.matches('go south')) {
+      return this.print('Your inner compass barks loudly at you. "What could possibly be interesting in the dining room?" You decide to stay put. (Actually the writer just didn\'t give me anything to put here.)');
+    } else if (this.matches('go north')) {
+      return this.goToRoom('Steak and Shake (Kitchen)');
+    } else if (this.matches('go west')) {
+      return this.goToRoom('Steak and Shake (Soda Fountain)');
+    } else if (this.matches('go east')) {
+      return this.goToRoom('Steak and Shake');
+    }
+  });
+  engine.addRoom('Steak and Shake (Kitchen)', function() {
+    if (this.matches('look')) {
+      return this.print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.');
+    } else if (this.matches('look oven') || this.matches('open oven')) {
+      return this.print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?');
+    } else if (this.matches('go south')) {
+      return this.goToRoom('Steak and Shake (Doorway)');
     }
   });
   return engine.setStartRoom('Ocean');
@@ -395,7 +488,7 @@ module.exports = function(engine) {
 
 
 
-},{}],7:[function(require,module,exports){
+},{}],"/home/dcolgan/projects/walevssharc/node_modules/mithril/mithril.js":[function(require,module,exports){
 var m = (function app(window, undefined) {
 	var OBJECT = "[object Object]", ARRAY = "[object Array]", STRING = "[object String]", FUNCTION = "function";
 	var type = {}.toString;
@@ -1556,4 +1649,4 @@ var m = (function app(window, undefined) {
 if (typeof module != "undefined" && module !== null && module.exports) module.exports = m;
 else if (typeof define === "function" && define.amd) define(function() {return m});
 
-},{}]},{},[1]);
+},{}]},{},["/home/dcolgan/projects/walevssharc/app/main.coffee"]);
