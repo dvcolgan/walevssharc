@@ -18,11 +18,6 @@ module.exports = (engine) ->
             @print('What are you doing? You are dead now.')
         else if @matches('win')
             @print('You did it. You win. Buy yourself a pizza because you are so clever.')
-        else if @matches('inv') or @matches('inventory') or @matches('items')
-            invStr = 'Your inventory includes '
-            for item in @getInventory()
-                invStr += 'a ' + item + ','
-            @print(invStr)
 
     engine.setAfterCommand ->
         if (not @flagIs('have_all_items', true) and
@@ -215,19 +210,63 @@ module.exports = (engine) ->
 
         else if @flagIs('have_all_items', true)
             if @matches('make pancakes')
-                @print('In the interest of making the game playable asap, I\'ll put this is after getting it up online.  Have some pancakes.')
-                @getItem('pancakes')
-                @removeItem('egg')
-                @removeItem('manatee milk')
-                @removeItem('flowers')
-                @removeItem('can of soda')
-                @removeItem('soda syrup')
-                @removeItem('margarine')
+                @goToRoom('Steak and Shake (Spooky Kitchen)')
 
         else if @matches('go south')
             @goToRoom('Steak and Shake (Doorway)')
         else
             @tryUniversalCommands()
+
+    engine.addRoom 'Steak and Shake (Spooky Kitchen)', ->
+        if @matches('look')
+            @print('"Where do I start?" you wonder out loud. If only there were written series of instructions guiding you through. Where would you find something like that?')
+            @wait =>
+                @print('You\'re pondering this when a draft comes over you. The lights flicker on and off. You sense a mysterious presence. The ghost of your old friend Creggles appears before you. Apparently he is haunting the Steak and Shake now and you\'re all like "Creggles, didn\'t we just hang out the other day? How are you a ghost already?"')
+                @wait =>
+                    @print('<span class="creepy">"Never you mind that now"</span> he says in his creepy nerd voice. <span class="creepy">"Sharc, if you hope to save the world from certain doom, you must succeed in making these pancakes. Use this ancient recipe handed down from the ancients to aid you."</span> An old, battered piece of paper floats down landing before you "Sweet Meemaws Sweety Sweet Flapjacks" it reads. <span class="creepy">"Now my work is done and I can ascend to my stepmom\'s house for grilled cheese sandwiches and chocolate milk."</span>')
+                    @wait =>
+                        @print('You read the recipe. It is all in riddles. You hope you are up to the task.')
+                        @wait =>
+                            @goToRoom('Steak and Shake (Spooky Kitchen with an empty bowl sitting there)')
+
+    engine.addRoom 'Steak and Shake (Spooky Kitchen with an empty bowl sitting there)', ->
+        if @matches('look')
+            @print('In an urn take but not churn items two not like goo.')
+        else if @matches('soda flower')
+            @removeItem('flowers')
+            @removeItem('can of soda')
+            @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
+
+    engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of powder sitting there)', ->
+        if @matches('look')
+            @print('Your potion is dry. This willst not fly. What\'s next must be dumped, poured and cracked for a proper flapjack.')
+        else if @matches('milk egg butter')
+            @removeItem('egg')
+            @removeItem('manatee milk')
+            @removeItem('margarine')
+            @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
+
+    engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)', ->
+        if @matches('look')
+            @print('Cutting and scooping shall have their day, but a for a fine fluffy batter there be but one way.')
+        else if @matches('stir')
+            @goToRoom('Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)')
+
+    engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)', ->
+        if @matches('look')
+            @print('Set the griddle or stove to medium heat. After it is warmed, drop batter a quarter cup at a time and turning once bubbles appear. "Well that seems pretty clear. I think I can do that on my own."')
+            @wait =>
+                @goToRoom('Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)')
+
+    engine.addRoom 'Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)', ->
+        if @matches('look')
+            @print('Ten minutes later the pancakes are finished, but something is missing.')
+        else if @matches('syrup')
+            @removeItem('soda syrup')
+            @print('You got pancakes!  Hot dang.')
+            @getItem('pancakes')
+            @wait =>
+                @goToRoom('Steak and Shake (Kitchen)')
 
 
     engine.addRoom 'Steak and Shake (Soda Fountain)', ->
@@ -484,4 +523,4 @@ module.exports = (engine) ->
             @print('You remove the Quadratic Eye from its compartment, close your eyes and allow union between your spirit and the universal chi flow. Then the goblin gets cut in half and you get your shampoo back.')
 
 
-    engine.setStartRoom('Ocean')
+    engine.setStartRoom('Steak and Shake (Spooky Kitchen)')

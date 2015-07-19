@@ -4,7 +4,7 @@
   "description": "Wale vs sharc: the comic: the interactive software title for your computer box",
   "main": "index.js",
   "scripts": {
-    "watch": "watchify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js",
+    "watch": "watchify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js -dv",
     "build": "browserify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js"
   },
   "repository": {

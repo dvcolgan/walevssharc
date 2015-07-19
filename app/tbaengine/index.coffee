@@ -17,6 +17,8 @@ module.exports = class Engine
         @callbacks = []
         @startRoom = ''
 
+        @waitCallback = null
+
     setStartRoom: (roomName) ->
         @startRoom = roomName
 
@@ -49,6 +51,12 @@ module.exports = class Engine
     getInventory: -> JSON.parse(JSON.stringify(@inventory))
 
     doCommand: (commandText) ->
+        if @waitCallback?
+            callback = @waitCallback
+            @waitCallback = null
+            callback()
+            return
+
         # clean up the command text
         commandText = commandText
             .trim()
@@ -116,6 +124,11 @@ module.exports = class Engine
 
     useItem: (item) ->
         @inventory[item] = 'used'
+        @notify()
+
+    wait: (callback) ->
+        @message += ' <strong>(Hit Enter)</strong>'
+        @waitCallback = callback
         @notify()
 
     listen: (callback) -> @callbacks.push(callback)

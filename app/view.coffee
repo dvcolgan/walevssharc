@@ -95,7 +95,7 @@ module.exports =
                     padding: '20px'
                     paddingTop: 0
                 m 'h1', engine.getCurrentRoomName()
-                m 'p', ctrl.vm.typer.getTypingMessage()
+                m 'p', m.trust(ctrl.vm.typer.getTypingMessage())
 
                 m 'form',
                     onsubmit: ctrl.onCommandSubmit
