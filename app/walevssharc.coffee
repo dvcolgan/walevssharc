@@ -18,6 +18,11 @@ module.exports = (engine) ->
             @print('What are you doing? You are dead now.')
         else if @matches('win')
             @print('You did it. You win. Buy yourself a pizza because you are so clever.')
+        else if @matches('inv') or @matches('inventory')
+            if Object.keys(@getInventory()).length > 0
+                @print('It tells you what is inventory right over there on the right side of the screen. Is typing this command really necessary?')
+            else
+                @print('Your inventory is empty you big dumb butt. Sorry, that was rude I meant to say you butt.')
 
     engine.setAfterCommand ->
         if (not @flagIs('have_all_items', true) and
@@ -30,6 +35,11 @@ module.exports = (engine) ->
             @print('"Well, I think I have all the ingredients," you say to yourself. "I just need one of those places where you put them together so it turns into something you can eat. You know, one of those...food preparing rooms."')
             @setFlag('have_all_items', true)
 
+
+    engine.addRoom 'Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box', ->
+        @print('Thank you for buying this game!  Type things in the box to make things happen!')
+        @wait =>
+            @goToRoom('Ocean')
 
     engine.addRoom 'Ocean', ->
         if @matches('look')
@@ -523,4 +533,4 @@ module.exports = (engine) ->
             @print('You remove the Quadratic Eye from its compartment, close your eyes and allow union between your spirit and the universal chi flow. Then the goblin gets cut in half and you get your shampoo back.')
 
 
-    engine.setStartRoom('Steak and Shake (Spooky Kitchen)')
+    engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
