@@ -97,15 +97,45 @@ module.exports =
                 m 'h1', engine.getCurrentRoomName()
                 m 'p', m.trust(ctrl.vm.typer.getTypingMessage())
 
-                m 'form',
-                    onsubmit: ctrl.onCommandSubmit
-                    m 'input[type=text]',
-                        style:
-                            display: 'block'
-                        onchange: m.withAttr('value', ctrl.vm.command)
-                        value: ctrl.vm.command()
-                        config: (element, isInitialized, context) ->
-                            if not isInitialized
-                                element.focus()
-                    m 'button[type=submit]', 'Do'
+                if engine.getCurrentRoomName() == 'End'
+                    [
+                        m 'div',
+                            style:
+                                width: '100%'
+                                textAlign: 'center'
+                            m 'img',
+                                src: '/shark-showering.png'
+                        m 'br'
+                        m 'br'
+                        m 'h3', 'Do you even feedback?'
+                        m 'div',
+                            m 'iframe',
+                                src: 'https://docs.google.com/forms/d/1drHKsfEzS_zA17YTd7OaWYis1Q8Jjf33fr7K6OcRBok/viewform?embedded=true'
+                                width: '760'
+                                height: '500'
+                                frameborder: '0'
+                                marginheight: '0'
+                                marginwidth: '0'
+                                style:
+                                    padding: '2px'
+                                    border: '1px solid grey'
+                                    marginRight: '20px'
+                                'Loading...'
+                            m 'textarea',
+                                style:
+                                    height: '500px'
+                                m.trust(engine.previousCommands.join('\n'))
+                    ]
+                else
+                    m 'form',
+                        onsubmit: ctrl.onCommandSubmit
+                        m 'input[type=text]',
+                            style:
+                                display: 'block'
+                            onchange: m.withAttr('value', ctrl.vm.command)
+                            value: ctrl.vm.command()
+                            config: (element, isInitialized, context) ->
+                                if not isInitialized
+                                    element.focus()
+                        m 'button[type=submit]', 'Do'
         ]

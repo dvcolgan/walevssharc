@@ -19,6 +19,8 @@ module.exports = class Engine
 
         @waitCallback = null
 
+        @previousCommands = []
+
     setStartRoom: (roomName) ->
         @startRoom = roomName
 
@@ -29,6 +31,7 @@ module.exports = class Engine
         localStorage.setItem 'progress', JSON.stringify({
             inventory: @inventory
             currentRoomName: @currentRoomName
+            previousCommands: @previousCommands
         })
 
     load: ->
@@ -36,6 +39,7 @@ module.exports = class Engine
             data = JSON.parse(localStorage.getItem('progress'))
             @inventory = data.inventory
             @currentRoomName = data.currentRoomName
+            @previousCommands = data.previousCommands or []
             return true
         catch
             localStorage.clear()
@@ -56,6 +60,8 @@ module.exports = class Engine
             @waitCallback = null
             callback()
             return
+
+        @previousCommands.push(commandText)
 
         # clean up the command text
         commandText = commandText
