@@ -23,14 +23,23 @@ module.exports = (engine) ->
                 @print('It tells you what is inventory right over there on the right side of the screen. Is typing this command really necessary?')
             else
                 @print('Your inventory is empty you big dumb butt. Sorry, that was rude I meant to say you butt.')
+        else
+            # Pick a random default response
+            defaultResponses = [
+                'What are you even trying to do?  Just stop.'
+                'Good one man.'
+                'Whoa there Eager McBeaver!'
+            ]
+            @print(defaultResponses[Math.floor(Math.random()*defaultResponses.length)])
+            
 
     engine.setAfterCommand ->
         if (not @flagIs('have_all_items', true) and
                 @hasItem('egg') and
                 @hasItem('flowers') and
                 @hasItem('can of soda') and
-                @hasItem('soda syrup') and
-                @hasItem('manatee milk') and
+                @hasItem('syrup') and
+                @hasItem('milk') and
                 @hasItem('margarine'))
             @print('"Well, I think I have all the ingredients," you say to yourself. "I just need one of those places where you put them together so it turns into something you can eat. You know, one of those...food preparing rooms."')
             @setFlag('have_all_items', true)
@@ -44,7 +53,7 @@ module.exports = (engine) ->
     engine.addRoom 'Ocean', ->
         if @matches('look')
             @print('You find yourself in the ocean. You are a shark by the name of Sharc and your $23 shampoo is missing. You suspect foul play. Welcome to the ocean, it is a big blue wet thing and also your home. Obvious exits are North to your friend Wale.')
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Wale')
         else
             @tryUniversalCommands()
@@ -74,13 +83,13 @@ module.exports = (engine) ->
             else
                 @print('"I can not lift a fin for you until you have brought a healthy serving of whole wheat pancakes with all natural maple syrup like I said before."')
 
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Ocean')
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Wetter Ocean')
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Cuttlefish')
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Billy Ocean')
         else
             @tryUniversalCommands()
@@ -90,11 +99,11 @@ module.exports = (engine) ->
         if @matches('look')
             @print('This is just some ocean you found. It does feel a little bit wetter than the rest of the ocean though. Also, did it just get warmer? Obvious exits are a garden to the west, Wale in the south, and a gameshow east.')
 
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Wale')
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Achtipus\'s Garden')
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Seal or No Seal')
         else
             @tryUniversalCommands()
@@ -113,11 +122,11 @@ module.exports = (engine) ->
             else
                 @print('They are cuddled out.')
 
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Wale')
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Achtipus\'s Garden')
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Steak and Shake')
         else
             @tryUniversalCommands()
@@ -125,7 +134,7 @@ module.exports = (engine) ->
 
     engine.addRoom 'Billy Ocean', ->
         if @matches('look')
-            window.open('https://www.youtube.com/watch?v=9f16Fw_K45s', '_blank')
+            window.open('https://www.youtube.com/watch?v=zNgcYGgtf8M', '_blank')
             @print('Suddenly, appearing before your eyes is singer-songwriter and former Caribbean king: Billy Ocean. Also Billy Ocean\'s car. Obvious exits are west to Wale and north to some kind of game show.')
         else if @matches('talk')
             @print('He wants you to get into his car and drive him to the hospital. He just drove through the car wash with the top down after dropping some acid.')
@@ -135,9 +144,9 @@ module.exports = (engine) ->
         else if @matches('call cops')
             @print('The police come and arrest Billy Ocean on charge of being completely irrelevant to this game. You Win! High Score.')
 
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Wale')
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Seal or No Seal')
         else
             @tryUniversalCommands()
@@ -171,13 +180,14 @@ module.exports = (engine) ->
 
         else if @matches('give umbrella')
             @print('"This will be perfect for blocking out that sun’s harsh rays. Thanks!"')
+            @removeItem('umbrella')
             @setFlag('given_umbrella', true)
 
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Water World')
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Wetter Ocean')
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Cuttlefish')
         else
             @tryUniversalCommands()
@@ -186,10 +196,10 @@ module.exports = (engine) ->
     engine.addRoom 'Steak and Shake', ->
         if @matches('look')
             @print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past. It\'s the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.')
-        else if @matches('go west') or @matches('open door') or @matches('go inside') or @matches('go in')
+        else if @matches('west') or @matches('open door') or @matches('enter') or @matches('in')
             @goToRoom('Steak and Shake (Doorway)')
 
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Cuttlefish')
         else
             @tryUniversalCommands()
@@ -199,17 +209,20 @@ module.exports = (engine) ->
         if @matches('look')
             @print('As you approach, the door falls clean off as if to warn you against entry. Never being one for omens, you ignore it. Inside you discover things much as you remember them. That is, if they had been mauled by a bear with blenders for hands who proceeded to set off a series of plastic explosives. To the south there are some tables and chairs, north lies the kitchen, and west a soda fountain. The outdoors is east.')
 
-        else if @matches('go south')
-            #@goToRoom('Steak and Shake (Dining Area)')
-            @print('Your inner compass barks loudly at you. "What could possibly be interesting in the dining room?" You decide to stay put. (Actually the writer just didn\'t give me anything to put here.)')
-        else if @matches('go north')
+        else if @matches('south')
+            @goToRoom('Steak and Shake (Dining Area)')
+        else if @matches('north')
             @goToRoom('Steak and Shake (Kitchen)')
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Steak and Shake (Soda Fountain)')
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Steak and Shake')
         else
             @tryUniversalCommands()
+
+    engine.addRoom 'Steak and Shake (Dining Area)', ->
+        if @matches('look')
+            @print('A dilapidated dining area lies before you. It is completely unremarkable. There is nowhere to go besides north to the way you came.')
 
     engine.addRoom 'Steak and Shake (Kitchen)', ->
         if @matches('look')
@@ -222,7 +235,7 @@ module.exports = (engine) ->
             if @matches('make pancakes')
                 @goToRoom('Steak and Shake (Spooky Kitchen)')
 
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Steak and Shake (Doorway)')
         else
             @tryUniversalCommands()
@@ -252,7 +265,7 @@ module.exports = (engine) ->
             @print('Your potion is dry. This willst not fly. What\'s next must be dumped, poured and cracked for a proper flapjack.')
         else if @matches('milk egg butter')
             @removeItem('egg')
-            @removeItem('manatee milk')
+            @removeItem('milk')
             @removeItem('margarine')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
 
@@ -261,10 +274,12 @@ module.exports = (engine) ->
             @print('Cutting and scooping shall have their day, but a for a fine fluffy batter there be but one way.')
         else if @matches('stir')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)')
+        else if @matches('shake')
+            @print('Dude, who do you think you are, James Bond?  This batter needs to be stirred, not shaken.')
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)', ->
         if @matches('look')
-            @print('Set the griddle or stove to medium heat. After it is warmed, drop batter a quarter cup at a time and turning once bubbles appear. "Well that seems pretty clear. I think I can do that on my own."')
+            @print('Set the griddle or stove to medium heat. After it is warmed, drop batter a quarter cup at a time and turning once until bubbles appear. "Well that seems pretty clear. I think I can do that on my own."')
             @wait =>
                 @goToRoom('Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)')
 
@@ -272,7 +287,7 @@ module.exports = (engine) ->
         if @matches('look')
             @print('Ten minutes later the pancakes are finished, but something is missing.')
         else if @matches('syrup')
-            @removeItem('soda syrup')
+            @removeItem('syrup')
             @print('You got pancakes!  Hot dang.')
             @getItem('pancakes')
             @wait =>
@@ -287,9 +302,9 @@ module.exports = (engine) ->
 
         else if @matches('take maple')
             @print('You find it shocking that you are the first raider of this soda tomb. But then again, you have always said people don\'t know the value of a bag of liquid sugar. You take off with it under cover of darkness.')
-            @getItem('soda syrup')
+            @getItem('syrup')
 
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Steak and Shake (Doorway)')
         else
             @tryUniversalCommands()
@@ -299,13 +314,13 @@ module.exports = (engine) ->
         if @matches('look')
             @print('You just walked onto the set of the wildly popular game show, "Seal or No Seal!" Where flamboyant contestants flail around and shout while trying to arrive at the answer to that age old question...SEAL OR NO SEAL? To the east is backstage, north will take you to the dressing room, west or south will take you back wherever you came from.')
 
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Seal or No Seal (Dressing Room)')
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Seal or No Seal (Backstage)')
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Wetter Ocean')
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Billy Ocean')
         else
             @tryUniversalCommands()
@@ -320,7 +335,7 @@ module.exports = (engine) ->
         if @matches('look')
             @print('This place is great! It would be easy to cobble together a costume to get on that show. Lets see what we can find. Obvious exits are south to the show entrance.')
         
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Seal or No Seal')
 
         else if @matches('costume')
@@ -427,7 +442,7 @@ module.exports = (engine) ->
                     alert('"Oh, wow!" Exclaims the show manager. "You look absolutely awful. You definitely have the look for our show." You start to dance around, whooping and hollering, declaring yourself the future king of the world. "And I see you have the charisma to match." He turns to his assistant, "Get this fella on stage at once.')
                     @goToRoom('Seal or No Seal (On Stage!)')
 
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Seal or No Seal')
         else
             @tryUniversalCommands()
@@ -456,11 +471,11 @@ module.exports = (engine) ->
         if @matches('look')
             @print('Oh man, Water World! You love that movie. Kevin Costner should have totally gotten the Oscar. Wait this isn\'t like that. This is Water World, the home of that stupid killer whale, Shampu. What a hack! Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
 
-        else if @matches('go north')
+        else if @matches('north')
             @goToRoom('Water World (Manatee Exhibit)')
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Water World (Gift Shop)')
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Achtipus\'s Garden')
         else
             @tryUniversalCommands()
@@ -474,9 +489,9 @@ module.exports = (engine) ->
             @getItem('umbrella')
             @print('Well, okay. You now have an umbrella.')
 
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Water World (Mechanical Room Type Place)')
-        else if @matches('go south')
+        else if @matches('south')
             @goToRoom('Water World')
         else
             @tryUniversalCommands()
@@ -493,7 +508,7 @@ module.exports = (engine) ->
         else if @matches('take')
             @print('You take that item to the counter. The cashier says it is ' + (18 + Math.floor(Math.random() * 30)).toString() + ' fish dollars but you only have 17 fish dollars. Nuts.')
 
-        else if @matches('go west')
+        else if @matches('west')
             @goToRoom('Water World')
         else
             @tryUniversalCommands()
@@ -502,14 +517,14 @@ module.exports = (engine) ->
     engine.addRoom 'Water World (Mechanical Room Type Place)', ->
         if @matches('look')
             @print('What in the name of Captain Nemo is this? There are manatees in hoists all over the room hooked up to...milking devices. This is no mechanical room! It\'s a cover for a secret, illegal, underground, black market, but probably organic, sea cow milking operation. The fiends! You are going to blow the lid off this thing for sure. The sweaty old fish running the machinery has not noticed you yet. Obvious exits are east to the manatee exhibit.')
-        else if @matches('talk')
+        else if @matches('talk') or @match('badge') or @match('sticker')
             if not @hasItem('badge sticker')
                 @print('You swim up to the fish at the controls. "I am going to shut you down!" You shout at him. He laughs heartily. "You don\'t stand a chance. You\'re just a regular guy. I\'m the mayor of Water World. Who is going to believe you?" He goes back to his work paying you no mind. He has a point.')
             else
                 @print('You swim up to the fish brandishing your badge sticker. "You are under arrest for illegal milk harvesting from endangered manatees. I\'m taking you in." "Wait," he says, "You don\'t have to do this. It\'s the only way I can keep Water World running. Don\'t you see? Now that we are on our sixth Shampu, people just don\'t seem to care about the magic of exploited marine mammals. I will, uh...make it worth your while though." He slides a fresh bottle of milk in your direction. Without looking at you he says, "It is worth thousands in the right market."')
-                @getItem('manatee milk')
+                @getItem('milk')
 
-        else if @matches('go east')
+        else if @matches('east')
             @goToRoom('Water World (Manatee Exhibit)')
         else
             @tryUniversalCommands()
@@ -519,10 +534,10 @@ module.exports = (engine) ->
         if @matches('look')
             @print('You have entered The Ethereal Realm. Why did you do that? That was a bad decision. Wale is at your side. There are a bunch of weird, spacey platforms and junk floating around in a cosmic void -- your typical surrealist dreamscape environment. Ahead is an ugly monster. He is clutching something in his hand. Obvious exits are NONE! This is the world of waking nightmares you dingus.')
         else if @matches('talk monster')
-            @print('You are getting worse at this game. You approach said monster in an effort to get some leads on your precious hair product. Maybe next time start by asking him about the status of the local basketball team or something? On closer examination though, you realize this not just any monster. It is a Torumekian hyper goblin. And in his grisly paw rests the item of your quest, your $23 shampoo. "Sharc, we can not allow him to use that shampoo," whispers your companion. "On the head of a hyper goblin, hair that smooth could mean the end of fashion as we know it. We must retrieve it by any means necessary." No sooner have the words left Wale\'s lips that you are spotted. That is all the motivation this beast needs. He flips the cap on the bottle, raising it to the filthy, string-like mop you can only assume must be his hair, all the while gazing down at you in defiance with his single blood shot eye. Do something!')
+            @print('You are getting worse at this game. You approach said monster in an effort to get some leads on your precious hair product. Maybe start by asking him about the status of the local basketball team or something? On closer examination though, you realize this is not just any monster. It is a Torumekian hyper goblin. And in his grisly paw rests the item of your quest, your $23 shampoo. "Sharc, we can not allow him to use that shampoo," whispers your companion. "On the head of a hyper goblin, hair that smooth could mean the end of fashion as we know it. We must retrieve it by any means necessary." No sooner have the words left Wale\'s lips that you are spotted. That is all the motivation this beast needs. He flips the cap on the bottle, raising it to the filthy, string-like mop you can only assume must be his hair, all the while gazing down at you in defiance with his single blood shot eye. Do something!')
 
         else if @matches('attack')
-            @print('You start to lunge towards the creature, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.  "Now Sharc!", he wheezes, "Use the power of the Quadratic Eye." "But you said I wasn\'t ready!" you cry, trying not to look at the sorry state of your friend. "No, it was I who was not ready. The p-power has always been within y-you." You feel a lump in your pocket. Reaching in, you pull out the Quadratic Eye.')
+            @print('You start to lunge towards the creature, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.  "Now Sharc!", he wheezes, "Use the power of the Quadratic Eye." "But you said I wasn\'t ready!" you cry, trying not to look at the sorry state of your friend. "No, it was I who was not ready. The p-power has always been within y-you."')
 
         else if @matches('use quadratic eye')
             @goToRoom('End')
