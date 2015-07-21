@@ -223,6 +223,8 @@ module.exports = (engine) ->
     engine.addRoom 'Steak and Shake (Dining Area)', ->
         if @matches('look')
             @print('A dilapidated dining area lies before you. It is completely unremarkable. There is nowhere to go besides north to the way you came.')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Kitchen)', ->
         if @matches('look')
@@ -251,6 +253,8 @@ module.exports = (engine) ->
                         @print('You read the recipe. It is all in riddles. You hope you are up to the task.')
                         @wait =>
                             @goToRoom('Steak and Shake (Spooky Kitchen with an empty bowl sitting there)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with an empty bowl sitting there)', ->
         if @matches('look')
@@ -259,6 +263,8 @@ module.exports = (engine) ->
             @removeItem('flowers')
             @removeItem('can of soda')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of powder sitting there)', ->
         if @matches('look')
@@ -268,6 +274,8 @@ module.exports = (engine) ->
             @removeItem('milk')
             @removeItem('margarine')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)', ->
         if @matches('look')
@@ -276,12 +284,16 @@ module.exports = (engine) ->
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)')
         else if @matches('shake')
             @print('Dude, who do you think you are, James Bond?  This batter needs to be stirred, not shaken.')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)', ->
         if @matches('look')
             @print('Set the griddle or stove to medium heat. After it is warmed, drop batter a quarter cup at a time and turning once until bubbles appear. "Well that seems pretty clear. I think I can do that on my own."')
             @wait =>
                 @goToRoom('Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)', ->
         if @matches('look')
@@ -292,6 +304,8 @@ module.exports = (engine) ->
             @getItem('pancakes')
             @wait =>
                 @goToRoom('Steak and Shake (Kitchen)')
+        else
+            @tryUniversalCommands()
 
 
     engine.addRoom 'Steak and Shake (Soda Fountain)', ->
@@ -384,7 +398,6 @@ module.exports = (engine) ->
 
 
     costumeMatches = (engine) ->
-        debugger
         group1 = 0
         group2 = 0
         group3 = 0
@@ -541,6 +554,9 @@ module.exports = (engine) ->
 
         else if @matches('use quadratic eye')
             @goToRoom('End')
+
+        else
+            @tryUniversalCommands()
 
 
     engine.addRoom 'End', ->
