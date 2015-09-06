@@ -10,41 +10,30 @@ String.prototype.capitalize = ->
 class TextTyper
     constructor: ->
         @currentMessage = ''
-        @typer = null
-        @makeTyper = (text) ->
-            @done = false
-            i = 0
-            window.onkeydown = (e) =>
-                i = text.length - 1
-                @done = true
-            speed = 4
-            typeLoop = =>
-                i++
-                m.redraw()
-                if i < text.length - 1
-                    setTimeout(typeLoop, speed)
-                else
-                    @done = true
-            setTimeout(typeLoop, speed)
+        @i = 0
 
-            return {
-                done: this.done
-                getText: -> return text[..i]
-            }
-    
-    print: (message) ->
+    typeLoop: =>
+        @i++
+        m.redraw()
+        if not @isDone()
+            setTimeout(@typeLoop, 4)
+
+    setMessage: (message) ->
         if message != @currentMessage
             @currentMessage = message
-            @typer = new @makeTyper(message)
-            m.redraw()
+            @i = 0
+            setTimeout(@typeLoop, 4)
 
-    getTypingMessage: -> if @typer? then @typer.getText() else ''
+    showAll: ->
+        @i = @currentMessage.length - 1
+
+    getTextSoFar: ->
+        @currentMessage[..@i]
 
     isDone: ->
-        @typer.done
-
-    getCurrentMessage: -> @currentMessage
-
+        console.log(@i, @currentMessage.length - 1)
+        @i >= @currentMessage.length - 1
+    
 
 module.exports =
     controller: class
@@ -58,7 +47,7 @@ module.exports =
             @vm.typer = new TextTyper()
 
             engine.listen =>
-                @vm.typer.print(engine.getCurrentMessage())
+                @vm.typer.setMessage(engine.getCurrentMessage())
                 m.redraw()
                 engine.save()
 
@@ -69,9 +58,12 @@ module.exports =
 
         onCommandSubmit: (e) =>
             e.preventDefault()
+            console.log(@vm.typer.isDone())
             if @vm.typer.isDone()
                 engine.doCommand(@vm.command())
                 @vm.command('')
+            else
+                @vm.typer.showAll()
 
 
     view: (ctrl) ->
@@ -109,7 +101,7 @@ module.exports =
                     padding: '20px'
                     paddingTop: 0
                 m 'h1', engine.getCurrentRoomName()
-                m 'p', m.trust(ctrl.vm.typer.getTypingMessage())
+                m 'p', m.trust(ctrl.vm.typer.getTextSoFar())
 
                 if engine.getCurrentRoomName() == 'End'
                     [
