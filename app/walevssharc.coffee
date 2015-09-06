@@ -240,6 +240,8 @@ Type <strong>"help"</strong> to see this menu again<br>
     engine.addRoom 'Steak and Shake (Dining Area)', ->
         if @matches('look')
             @print('A dilapidated dining area lies before you. It is completely unremarkable. There is nowhere to go besides north to the way you came.')
+        else if @matches('north')
+            @goToRoom('Steak and Shake (Doorway)')
         else
             @tryUniversalCommands()
 

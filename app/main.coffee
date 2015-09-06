@@ -1,6 +1,6 @@
 m = require('mithril')
-engine = require('app/engine')
-view = require('app/view')
+engine = new(require('./engine'))()
+view = require('app/view')(engine)
 
 
 m.mount(document.body, view)

@@ -1,5 +1,4 @@
 m = require('mithril')
-engine = require('app/engine')
 WaleVsSharc = require('app/walevssharc')
 
 
@@ -35,7 +34,7 @@ class TextTyper
         @i >= @currentMessage.length - 1
     
 
-module.exports =
+module.exports = (engine) ->
     controller: class
         constructor: ->
 
