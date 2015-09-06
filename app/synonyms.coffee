@@ -6,6 +6,7 @@ module.exports =
         'gawk'
         'observe'
         'spy'
+        'check'
     ]
     take: [
         'pick up'
@@ -45,4 +46,42 @@ module.exports =
         'plot'
         'plants'
         'produce'
+    ]
+    flowers: [
+        'flower'
+        'flour'
+    ]
+    soda: [
+        'soda'
+        'can of soda'
+        'soda can'
+    ]
+    syrup: [
+        'Maple syrup'
+        'soda syrup'
+        'Maple soda syrup'
+        'Bag of syrup'
+        'syrup bag'
+    ]
+    margarine: [
+        'butter'
+        'stick of butter'
+        'stick of margarine'
+    ]
+    stir: [
+        'Whip'
+        'Pulse'
+        'Vibrate'
+        'Mix'
+        'Blend'
+        'Agitate'
+        'Churn'
+        'Beat'
+    ]
+    attack: [
+        'fight'
+        'attack goblin'
+        'fight goblin'
+        'punch'
+        'bite'
     ]
