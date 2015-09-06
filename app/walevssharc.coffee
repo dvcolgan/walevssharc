@@ -286,8 +286,19 @@ Type <strong>"help"</strong> to see this menu again<br>
         if @exactlyMatches('look')
             @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.')
         else if @matches('look oven') or @matches('open oven')
-            @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?')
-            @getItem('soda')
+            @setFlag('oven_open', true)
+            if not @hasItem('soda')
+                @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?')
+            else
+                @print('The oven is empty.')
+
+        else if @matches('close oven')
+            @print('How responsible of you.')
+            @setFlag('oven_open', false)
+
+        else if @matches('take soda') and @flagIs('oven_open', true)
+                @print('You got soda.')
+                @getItem('soda')
 
         else if @flagIs('have_all_items', true)
             if @matches('make pancakes')
