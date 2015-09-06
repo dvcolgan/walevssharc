@@ -6,6 +6,33 @@ String.prototype.capitalize = ->
     @[0].toUpperCase() + @[1..]
 
 
+ITEM_NAMES = {
+    egg: 'Egg'
+    cuttlefish: 'Cuttlefish'
+    flowers: 'Flowers'
+    soda: 'Baking Soda'
+    pancakes: 'Pancakes'
+    syrup: 'Maple Syrup'
+    margarine: 'Margarine'
+    umbrella: 'Umbrella'
+    badge: 'Badge Sticker'
+    milk: 'Manatee Milk'
+    'red herring': 'Red Herring'
+    'cowboy hat': 'Cowboy Hat'
+    'rainbow wig': 'Rainbow Wig'
+    'motorcycle helmet': 'Motorcycle Helmet'
+    'stovepipe hat': 'Stovepipe Hat'
+    'leather jacket': 'Leather Jacket'
+    'clown suit': 'Clown Suit'
+    'oldtimey suit': 'Old-Timey Suit'
+    'cow print vest': 'Cow Print Vest'
+    'fake beard': 'Fake Beard'
+    'gun belt': 'Gun Belt'
+    'metal chain': 'Metal Chain'
+    'rubber chicken': 'Rubber Chicken'
+}
+
+
 class TextTyper
     constructor: ->
         @currentMessage = ''
@@ -76,15 +103,15 @@ module.exports = (engine) ->
                         marginTop: 0
                     'Inventory'
                 [
-                    for itemName, state of engine.getInventory()
+                    for item, state of engine.getInventory()
                         if state == 'gotten'
                             m 'p',
-                                itemName
+                                ITEM_NAMES[item]
                         else if state == 'used'
                             m 'p',
                                 style:
                                     textDecoration: 'line-through'
-                                itemName
+                                ITEM_NAMES[item]
                     m 'button',
                         onclick: ->
                             localStorage.clear()

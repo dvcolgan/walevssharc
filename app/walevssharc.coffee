@@ -11,6 +11,7 @@ Results:
     @setFlag(flag name, value)
 """
 
+
 module.exports = (engine) ->
     helpText = """
 Advance through the game by typing commands like <strong>look, get, and go.</strong><br>
@@ -71,6 +72,12 @@ Type <strong>"help"</strong> to see this menu again<br>
 
         else if @matches('look')
             @print('I am not authorized to tell you about that yet. Stop trying to cheat man!')
+
+        else if @matches('take')
+            @print('I am not authorized to give that to you.')
+
+        else if @matches('talk')
+            @print('Who are you talking to?')
 
         else
             # Pick a random default response
