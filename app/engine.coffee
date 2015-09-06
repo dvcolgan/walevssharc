@@ -12,6 +12,7 @@ module.exports = class Engine
         @flags = {}
 
         @commandWords = []
+        @commandText = ''
         @message = ''
 
         @callbacks = []
@@ -54,17 +55,17 @@ module.exports = class Engine
 
     getInventory: -> JSON.parse(JSON.stringify(@inventory))
 
-    doCommand: (commandText) ->
+    doCommand: (@commandText) ->
         if @waitCallback?
             callback = @waitCallback
             @waitCallback = null
             callback()
             return
 
-        @previousCommands.push(commandText)
+        @previousCommands.push(@commandText)
 
         # clean up the command text
-        commandText = commandText
+        @commandText = @commandText
             .trim()
             .toLowerCase()
             .replace(/\W+/g, ' ')
@@ -73,9 +74,9 @@ module.exports = class Engine
         # find synonyms and replace them with the canonical word
         for cannonicalWord, synonyms of synonymData
             for synonym in synonyms
-                commandText = commandText.replace(synonym, cannonicalWord)
+                @commandText = @commandText.replace(synonym, cannonicalWord)
 
-        @commandWords = commandText.split(' ')
+        @commandWords = @commandText.split(' ')
 
         @rooms[@currentRoomName]()
         @afterCommand()
@@ -85,6 +86,9 @@ module.exports = class Engine
 
     tryUniversalCommands: ->
         @universalCommands()
+
+    exactlyMatches: (pattern) ->
+        @commandText == pattern
 
     matches: (pattern) ->
         # If each word in the spec command is found
