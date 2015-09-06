@@ -12,6 +12,16 @@ Results:
 """
 
 module.exports = (engine) ->
+    helpText = """
+Advance through the game by typing commands like <strong>look, get, and go.</strong><br>
+Commands catalogue and/or pre set command prefix buttons: <strong>Go, talk, get, look, use...</strong><br>
+Look in an area to gain more information or look at objects: <strong>(look fish)</strong><br>
+Move by typing go commands: <strong>(go east)</strong><br>
+Engage in philosophical debate: <strong>(talk sorceress)</strong><br>
+Use items in inventory: <strong>(use lightsaber)</strong><br>
+There are other commands too and some you can just click on a button to use. Experiment and try things in this beautiful new world before you.<br>
+Type <strong>"help"</strong> to see this menu again<br>
+"""
 
     engine.setUniversalCommands ->
         if @matches('die')
@@ -23,6 +33,8 @@ module.exports = (engine) ->
                 @print('It tells you what is inventory right over there on the right side of the screen. Is typing this command really necessary?')
             else
                 @print('Your inventory is empty you big dumb butt. Sorry, that was rude I meant to say you butt.')
+        else if @matches('help')
+            @print(helpText)
         else
             # Pick a random default response
             defaultResponses = [
@@ -37,7 +49,7 @@ module.exports = (engine) ->
         if (not @flagIs('have_all_items', true) and
                 @hasItem('egg') and
                 @hasItem('flowers') and
-                @hasItem('can of soda') and
+                @hasItem('baking soda') and
                 @hasItem('syrup') and
                 @hasItem('milk') and
                 @hasItem('margarine'))
@@ -47,6 +59,11 @@ module.exports = (engine) ->
 
     engine.addRoom 'Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box', ->
         @print('Thank you for buying this game!  Type things in the box to make things happen!')
+        @wait =>
+            @goToRoom('How To Play')
+
+    engine.addRoom 'How To Play', ->
+        @print(helpText)
         @wait =>
             @goToRoom('Ocean')
 
@@ -77,7 +94,7 @@ module.exports = (engine) ->
             @goToRoom('The Ethereal Realm')
 
         else if @matches('talk wale')
-            if @flagIs('talked_to_wale', true)
+            if @flagIs('talked_to_wale', false)
                 @print('(Get ready to do some reading) Wale is trying to meditate or something pretentious that you don\'t care about. You have something important! "Wale" you shout, "I need your help! The condition of my magnificent scalp is at stake." Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. Pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.')
                 @setFlag('talked_to_wale', true)
             else
@@ -231,7 +248,7 @@ module.exports = (engine) ->
             @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.')
         else if @matches('look oven') or @matches('open oven')
             @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?')
-            @getItem('can of soda')
+            @getItem('baking soda')
 
         else if @flagIs('have_all_items', true)
             if @matches('make pancakes')
@@ -261,7 +278,7 @@ module.exports = (engine) ->
             @print('In an urn take but not churn items two not like goo.')
         else if @matches('soda flower')
             @removeItem('flowers')
-            @removeItem('can of soda')
+            @removeItem('baking soda')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
         else
             @tryUniversalCommands()
@@ -512,7 +529,7 @@ module.exports = (engine) ->
 
     engine.addRoom 'Water World (Gift Shop)', ->
         if @matches('look')
-            @print('You enter the Water World gift shop. There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? East to the park entrance.')
+            @print('You enter the Water World gift shop. There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? West to the park entrance.')
 
         else if @matches('take badge') or @matches('take sheriff') or @matches('take sticker') or @matches('take stickers')
             @getItem('badge sticker')

@@ -11,17 +11,26 @@ class TextTyper
     constructor: ->
         @currentMessage = ''
         @typer = null
-        @makeTyper = (text, speed=4) ->
+        @makeTyper = (text) ->
+            @done = false
             i = 0
-            typeLoop = ->
+            window.onkeydown = (e) =>
+                i = text.length - 1
+                @done = true
+            speed = 4
+            typeLoop = =>
                 i++
                 m.redraw()
                 if i < text.length - 1
                     setTimeout(typeLoop, speed)
+                else
+                    @done = true
             setTimeout(typeLoop, speed)
 
-            return ->
-                return text[..i]
+            return {
+                done: this.done
+                getText: -> return text[..i]
+            }
     
     print: (message) ->
         if message != @currentMessage
@@ -29,7 +38,10 @@ class TextTyper
             @typer = new @makeTyper(message)
             m.redraw()
 
-    getTypingMessage: -> if @typer? then @typer() else ''
+    getTypingMessage: -> if @typer? then @typer.getText() else ''
+
+    isDone: ->
+        @typer.done
 
     getCurrentMessage: -> @currentMessage
 
@@ -57,8 +69,10 @@ module.exports =
 
         onCommandSubmit: (e) =>
             e.preventDefault()
-            engine.doCommand(@vm.command())
-            @vm.command('')
+            if @vm.typer.isDone()
+                engine.doCommand(@vm.command())
+                @vm.command('')
+
 
     view: (ctrl) ->
         [
