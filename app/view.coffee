@@ -15,13 +15,13 @@ class TextTyper
         @i++
         m.redraw()
         if not @isDone()
-            setTimeout(@typeLoop, 8)
+            setTimeout(@typeLoop, 6)
 
     setMessage: (message) ->
         if message != @currentMessage
             @currentMessage = message
             @i = 0
-            setTimeout(@typeLoop, 8)
+            setTimeout(@typeLoop, 6)
 
     showAll: ->
         @i = @currentMessage.length - 1
