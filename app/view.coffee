@@ -16,13 +16,13 @@ class TextTyper
         @i++
         m.redraw()
         if not @isDone()
-            setTimeout(@typeLoop, 4)
+            setTimeout(@typeLoop, 8)
 
     setMessage: (message) ->
         if message != @currentMessage
             @currentMessage = message
             @i = 0
-            setTimeout(@typeLoop, 4)
+            setTimeout(@typeLoop, 8)
 
     showAll: ->
         @i = @currentMessage.length - 1
@@ -58,7 +58,6 @@ module.exports =
 
         onCommandSubmit: (e) =>
             e.preventDefault()
-            console.log(@vm.typer.isDone())
             if @vm.typer.isDone()
                 engine.doCommand(@vm.command())
                 @vm.command('')
