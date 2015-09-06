@@ -35,6 +35,43 @@ Type <strong>"help"</strong> to see this menu again<br>
                 @print('Your inventory is empty you big dumb butt. Sorry, that was rude I meant to say you butt.')
         else if @matches('help')
             @print(helpText)
+
+        else if @matches('look cuttlefish') and @hasItem('cuttlefish')
+            @print('Aside from being really funny looking, highly intelligent and highly ugly, cuttlefish can also release an ink like substance to escape predators.')
+
+        else if @matches('look egg') and @hasItem('egg')
+            @print('This looks to be an ordinary egg. But remember, it was pulled out of Billy Ocean\'s glove box, so maybe not?')
+
+        else if @matches('look flowers') and @hasItem('flowers')
+            @print('These are some versatile looking flowers. So much so, you can sense a pun like aura surrounding them.')
+
+        else if @matches('look umbrella') and @hasItem('umbrella')
+            @print('This umbrella could provide a lot of shade. I don\'t see how it can fit in your pockets.')
+
+        else if @matches('look soda') and @hasItem('soda')
+            @print('It\'s a can of soda you found in the oven at Steak and Shake.')
+
+        else if @matches('look syrup') and @hasItem('syrup')
+            @print('A bag of maple flavored fountain syrup. It could have other uses too.')
+
+        else if @matches('look herring') and @hasItem('herring')
+            @print('It is a can of pickled herring you won on a gameshow. Way to go.')
+
+        else if @matches('look red herring') and @hasItem('red herring')
+            @print('It is a red herring.')
+
+        else if @matches('look margarine') and @hasItem('margarine')
+            @print('No Ifs, Ands or Butter vaguely margarine spread type product. Modeled by Lou Ferrigno.')
+
+        else if @matches('look badge') and @hasItem('badge')
+            @print('It\'s the junior marine sheriff badge sticker you got at the Water World gift shop. In a poorly lit room, one might mistake this for an authentic junior marine sheriff badge.')
+
+        else if @matches('look pancakes') and @hasItem('pancakes')
+            @print('Mystical pancakes you made with an enchanted recipe and totally not the correct ingredients, remember? That was UH-may-zing! Take them to Wale and hurry.')
+
+        else if @matches('look')
+            @print('I am not authorized to tell you about that yet. Stop trying to cheat man!')
+
         else
             # Pick a random default response
             defaultResponses = [
@@ -43,13 +80,13 @@ Type <strong>"help"</strong> to see this menu again<br>
                 'Whoa there Eager McBeaver!'
             ]
             @print(defaultResponses[Math.floor(Math.random()*defaultResponses.length)])
-            
 
+        
     engine.setAfterCommand ->
         if (not @flagIs('have_all_items', true) and
                 @hasItem('egg') and
                 @hasItem('flowers') and
-                @hasItem('baking soda') and
+                @hasItem('soda') and
                 @hasItem('syrup') and
                 @hasItem('milk') and
                 @hasItem('margarine'))
@@ -250,7 +287,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.')
         else if @matches('look oven') or @matches('open oven')
             @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?')
-            @getItem('baking soda')
+            @getItem('soda')
 
         else if @flagIs('have_all_items', true)
             if @matches('make pancakes')
@@ -280,7 +317,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @print('In an urn take but not churn items two not like goo.')
         else if @matches('soda flower')
             @removeItem('flowers')
-            @removeItem('baking soda')
+            @removeItem('soda')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
         else
             @tryUniversalCommands()
@@ -533,8 +570,8 @@ Type <strong>"help"</strong> to see this menu again<br>
         if @matches('look')
             @print('You enter the Water World gift shop. There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? West to the park entrance.')
 
-        else if @matches('take badge') or @matches('take sheriff') or @matches('take sticker') or @matches('take stickers')
-            @getItem('badge sticker')
+        else if @matches('take badge')
+            @getItem('badge')
             @print('You take the junior marine sheriff badge stickers to the counter. The cashier says they are on sale, only 15 fish dollars, plus tax. Yussss. You pay the man.')
 
         else if @matches('take')
@@ -550,7 +587,7 @@ Type <strong>"help"</strong> to see this menu again<br>
         if @matches('look')
             @print('What in the name of Captain Nemo is this? There are manatees in hoists all over the room hooked up to...milking devices. This is no mechanical room! It\'s a cover for a secret, illegal, underground, black market, but probably organic, sea cow milking operation. The fiends! You are going to blow the lid off this thing for sure. The sweaty old fish running the machinery has not noticed you yet. Obvious exits are east to the manatee exhibit.')
         else if @matches('talk') or @match('badge') or @match('sticker')
-            if not @hasItem('badge sticker')
+            if not @hasItem('badge')
                 @print('You swim up to the fish at the controls. "I am going to shut you down!" You shout at him. He laughs heartily. "You don\'t stand a chance. You\'re just a regular guy. I\'m the mayor of Water World. Who is going to believe you?" He goes back to his work paying you no mind. He has a point.')
             else
                 @print('You swim up to the fish brandishing your badge sticker. "You are under arrest for illegal milk harvesting from endangered manatees. I\'m taking you in." "Wait," he says, "You don\'t have to do this. It\'s the only way I can keep Water World running. Don\'t you see? Now that we are on our sixth Shampu, people just don\'t seem to care about the magic of exploited marine mammals. I will, uh...make it worth your while though." He slides a fresh bottle of milk in your direction. Without looking at you he says, "It is worth thousands in the right market."')

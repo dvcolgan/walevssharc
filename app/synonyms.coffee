@@ -52,15 +52,16 @@ module.exports =
         'flour'
     ]
     soda: [
-        'soda'
+        'pop'
+        'can of pop'
         'can of soda'
         'soda can'
     ]
     syrup: [
-        'Maple syrup'
+        'maple syrup'
         'soda syrup'
-        'Maple soda syrup'
-        'Bag of syrup'
+        'maple soda syrup'
+        'bag of syrup'
         'syrup bag'
     ]
     margarine: [
@@ -69,14 +70,14 @@ module.exports =
         'stick of margarine'
     ]
     stir: [
-        'Whip'
-        'Pulse'
-        'Vibrate'
-        'Mix'
-        'Blend'
-        'Agitate'
-        'Churn'
-        'Beat'
+        'whip'
+        'pulse'
+        'vibrate'
+        'mix'
+        'blend'
+        'agitate'
+        'churn'
+        'beat'
     ]
     attack: [
         'fight'
@@ -84,4 +85,8 @@ module.exports =
         'fight goblin'
         'punch'
         'bite'
+    ]
+    badge: [
+        'sherrif'
+        'sticker'
     ]
