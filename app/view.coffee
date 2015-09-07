@@ -30,6 +30,7 @@ ITEM_NAMES = {
     'gun belt': 'Gun Belt'
     'metal chain': 'Metal Chain'
     'rubber chicken': 'Rubber Chicken'
+    'quadratic eye': 'Quadratic Eye'
 }
 
 
@@ -57,7 +58,6 @@ class TextTyper
         @currentMessage[..@i]
 
     isDone: ->
-        console.log(@i, @currentMessage.length - 1)
         @i >= @currentMessage.length - 1
     
 
