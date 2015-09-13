@@ -85,6 +85,8 @@ Type <strong>"help"</strong> to see this menu again<br>
                 'What are you even trying to do?  Just stop.'
                 'Good one man.'
                 'Whoa there Eager McBeaver!'
+                'Don\'t do that.'
+                'Gross, no way.'
             ]
             @print(defaultResponses[Math.floor(Math.random()*defaultResponses.length)])
 
@@ -138,9 +140,11 @@ Type <strong>"help"</strong> to see this menu again<br>
             @goToRoom('The Ethereal Realm')
 
         else if @matches('talk wale')
-            if @flagIs('talked_to_wale', false)
-                @print('(Get ready to do some reading) Wale is trying to meditate or something pretentious that you don\'t care about. You have something important! "Wale" you shout, "I need your help! The condition of my magnificent scalp is at stake." Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. Pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.')
-                @setFlag('talked_to_wale', true)
+            if not @flagIs('talked_to_wale', true)
+                @print('Wale is trying to meditate or something pretentious that you don\'t care about. You have something important! "Wale" you shout, "I need your help! The condition of my magnificent scalp is at stake."')
+                @wait =>
+                    @print('Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. Pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.')
+                    @setFlag('talked_to_wale', true)
             else
                 @print('"I can not lift a fin for you until you have brought a healthy serving of whole wheat pancakes with all natural maple syrup like I said before."')
 
