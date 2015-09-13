@@ -56,13 +56,6 @@ module.exports =
         'can of soda'
         'soda can'
     ]
-    syrup: [
-        'maple syrup'
-        'soda syrup'
-        'maple soda syrup'
-        'bag of syrup'
-        'syrup bag'
-    ]
     margarine: [
         'butter'
         'stick of butter'

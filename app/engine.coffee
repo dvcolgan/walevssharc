@@ -124,7 +124,7 @@ module.exports = class Engine
             @roomsEntered[roomName]++
         else
             @roomsEntered[roomName] = 1
-        @doCommand('enter')
+        @doCommand('__enter_room__')
         @notify()
 
     goToStart: ->
