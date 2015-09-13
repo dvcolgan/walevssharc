@@ -130,13 +130,22 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Wale', ->
         if @exactlyMatches('enter') or @exactlyMatches('look')
-            @print('Hey, it is your friend, Wale. He is doing that thing where he has his eyes closed and acts like he did not notice your arrival. He is kind of a prick, but also your friend. What can you do? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.')
+            if @isFirstTimeEntering()
+                @print('Hey, it is your friend, Wale. He is doing that thing where he has his eyes closed and acts like he did not notice your arrival. He is kind of a prick, but also your friend. What can you do? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.')
+            else
+                @print('Wale is still just floating there trying to be enigmatic, would he even notice if you said something? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.')
 
         else if @matches('give pancakes')
             if @hasItem('pancakes')
-                @print('"Hey Wale," you call out as intrusively as possible, "I got your--" Before you could finish your sentence, your blubbery friend has snatched the plate away and, in a most undignified manner, begins mowing through the fried discs you so artfully prepared. "Soul searching takes a lot of energy," he explains between bites. "I haven\'t eaten anything all day." Once finished, Wale straightens himself out, looking a mite embarrassed for the savage display he just put on. "What was it you needed?" "Oh Wale, it\'s terrible. I think my $23 shampoo was stolen and the ghost of my not really dead friend says the fate of the world hangs in the balance." "I see," says Wale, his voice and manner remaining unchanged despite the threat of the world unbalancing. "Sharc, I fear the worst. You must summon the ethereal door." "No, Wale," you say, "you made me swear a thousand vows never to bring that cursed relic back among us." "I know what I said, but I also knew there would come a time when we would have no other choice."  You should probably summon the door.')
-                @removeItem('pancakes')
-                @setFlag('given_pancakes', true)
+                @print('"Hey Wale," you call out as intrusively as possible, "I got your--" Before you could finish your sentence, your blubbery friend has snatched the plate away and, in a most undignified manner, begins mowing through the fried discs you so artfully prepared. "Soul searching takes a lot of energy," he explains between bites. "I haven\'t eaten anything all day."')
+                @wait =>
+                    @print('Once finished, Wale straightens himself out, looking a mite embarrassed for the savage display he just put on. "What was it you needed?" "Oh Wale, it\'s terrible. I think my $23 shampoo was stolen and the ghost of my not really dead friend says the fate of the world hangs in the balance."')
+                    @wait =>
+                        @print('"I see," says Wale, his voice and manner remaining unchanged despite the threat of the world unbalancing. "Sharc, I fear the worst. You must summon the ethereal door."')
+                        @wait =>
+                            @print('"No, Wale," you say, "you made me swear a thousand vows never to bring that cursed relic back among us." "I know what I said, but I also knew there would come a time when we would have no other choice."  You should probably summon the door.')
+                            @removeItem('pancakes')
+                            @setFlag('given_pancakes', true)
 
         else if @matches('summon door') and @flagIs('given_pancakes', true)
             @print('You, finally convinced of your urgency and utter desperation, perform some intricate rites and incantations that would be really cool if you could see them, but I guess you will just have to use your imaginations. Text only fools!  The ethereal door stands open before you.')
@@ -149,7 +158,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             if not @flagIs('talked_to_wale', true)
                 @print('Wale is trying to meditate or something pretentious that you don\'t care about. You have something important! "Wale" you shout, "I need your help! The condition of my magnificent scalp is at stake."')
                 @wait =>
-                    @print('Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. Pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.')
+                    @print('Wale sighs a heavy, labored sigh. "Sharc, you have disturbed my journey to my innermost being. Before I can help you, reparations must be made. You must make me a healthy serving of pancakes: whole wheat, with all natural maple syrup. Now leave me as I peel back the layers of the self and ponder the lesson of the cherry blossom.')
                     @setFlag('talked_to_wale', true)
             else
                 @print('"I can not lift a fin for you until you have brought a healthy serving of whole wheat pancakes with all natural maple syrup like I said before."')
@@ -272,7 +281,10 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Steak and Shake', ->
         if @exactlyMatches('enter')
-            @print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past.')
+            if @isFirstTimeEntering()
+                @print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past. Cuttlefish stomping grounds lie east.')
+            else
+                @print('What is left of the Steak and Shake building you used to work at before your friend exploded it trying to make firework sandwiches. Cuttlefish stomping grounds lie east.')
         else if @exactlyMatches('look')
             @print("It's the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.")
 
@@ -287,7 +299,10 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Steak and Shake (Doorway)', ->
         if @exactlyMatches('enter') or @exactlyMatches('look')
-            @print('As you approach, the door falls clean off as if to warn you against entry. Never being one for omens, you ignore it. Inside you discover things much as you remember them. That is, if they had been mauled by a bear with blenders for hands who proceeded to set off a series of plastic explosives. To the south there are some tables and chairs, north lies the kitchen, and west a soda fountain. The outdoors is east.')
+            if @isFirstTimeEntering()
+                @print('As you approach, the door falls clean off as if to warn you against entry. Never being one for omens, you ignore it. Inside you discover things much as you remember them. That is, if they had been mauled by a bear with blenders for hands who proceeded to set off a series of plastic explosives. To the south there are some tables and chairs, north lies the kitchen, and west a soda fountain. The outdoors is East.')
+            else
+                @print('There are some battered tables and chairs south, a kitchen north, and a soda fountain west. You can exit East.')
 
         else if @matches('south')
             @goToRoom('Steak and Shake (Dining Area)')
@@ -310,7 +325,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Steak and Shake (Kitchen)', ->
         if @exactlyMatches('enter') or @exactlyMatches('look')
-            @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range. South leads back to the main entry area.')
+            @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and stove top. South leads back to the main entry area. South goes back to the doorway.')
         else if @matches('look oven') or @matches('open oven')
             if not @hasItem('soda')
                 @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda? South leads back to the main entry area.')
@@ -403,11 +418,24 @@ Type <strong>"help"</strong> to see this menu again<br>
         if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('You see that the soda fountain has somehow remained largely undamaged. You think back to the days when you would sneak out bags of plain syrup to drink and the freakish waking dreams it would induce in you. You wonder if there is any still in there. The East door goes back to the main area.')
         else if @matches('look fountain') or @matches('open fountain') or @matches('look soda') or @matches('open soda')
-            @print('Avast, a hidden treasure trove of sugary wonder that has lain dormant all these years! You tremble at the beauty of the sight before you. So many bags and yet your magic hammerspace satchel will only allow for one. There\'s Spritz, Professor Ginger, Cactus Lager, and Ms. Shim Sham\'s Maple Soda.')
+            if not @hasItem('syrup')
+                @print('Avast, a hidden treasure trove of sugary wonder that has lain dormant all these years! You tremble at the beauty of the sight before you. So many bags and yet your magic hammerspace satchel will only allow for one. There\'s Spritz, Professor Ginger, Cactus Lager, and Ms. Shim Sham\'s Maple Soda.')
+            else
+                @print('It\'s that soft drink dispenser you got a bag of syrup from.')
 
-        else if @matches('take maple')
-            @print('You find it shocking that you are the first raider of this soda tomb. But then again, you have always said people don\'t know the value of a bag of liquid sugar.')
-            @getItem('syrup')
+        else if not @hasItem('syrup')
+            if @matches('take spritz')
+                @print('Spritz, A refreshing blast of pickle and celery? No way.')
+            else if @matches('take professor') or @matches('take ginger')
+                @print('Professor ginger, 72 flavors and all of them make me long for a quick death. Nope nope nope.')
+            else if @matches('take cactus') or @matches('take lager')
+                @print('Cactus lager, You think you see some needles floating in there. Come on man.')
+
+            else if @matches('take maple') or @matches('take shim') or @matches('take sham') or @matches('take ms')
+                @print('You find it shocking that you are the first raider of this soda tomb. But then again, you have always said people don\'t know the value of a bag of liquid sugar.')
+                @getItem('syrup')
+        else if @matches('take')
+                @print('Yup there is a lot of soda in there, but you already picked one. Now go live with your choice.')
 
         else if @matches('east')
             @goToRoom('Steak and Shake (Doorway)')

@@ -47,8 +47,7 @@ module.exports =
         'plants'
         'produce'
     ]
-    flowers: [
-        'flower'
+    flower: [
         'flour'
     ]
     soda: [

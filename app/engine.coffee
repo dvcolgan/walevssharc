@@ -10,6 +10,7 @@ module.exports = class Engine
         @inventory = {}
         @currentRoomName = ''
         @flags = {}
+        @roomsEntered = {}
 
         @commandWords = []
         @commandText = ''
@@ -33,6 +34,8 @@ module.exports = class Engine
             inventory: @inventory
             currentRoomName: @currentRoomName
             previousCommands: @previousCommands
+            flags: @flags
+            roomsEntered: @roomsEntered
         })
 
     load: ->
@@ -41,6 +44,8 @@ module.exports = class Engine
             @inventory = data.inventory
             @currentRoomName = data.currentRoomName
             @previousCommands = data.previousCommands or []
+            @flags = data.flags
+            @roomsEntered = data.roomsEntered
             return true
         catch
             localStorage.clear()
@@ -106,19 +111,24 @@ module.exports = class Engine
 
     flagIs: (flagName, value) -> @flags[flagName] == value
 
+    isFirstTimeEntering: ->
+        return @roomsEntered[@currentRoomName] == 1
+
     print: (text) ->
         @message = text
         @notify()
 
     goToRoom: (roomName) ->
         @currentRoomName = roomName
+        if roomName of @roomsEntered
+            @roomsEntered[roomName]++
+        else
+            @roomsEntered[roomName] = 1
         @doCommand('enter')
         @notify()
 
     goToStart: ->
-        @currentRoomName = @startRoom
-        @doCommand('enter')
-        @notify()
+        @goToRoom(@startRoom)
 
     setFlag: (flagName, value) ->
         @flags[flagName] = value
