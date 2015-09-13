@@ -114,9 +114,10 @@ module.exports = (engine) ->
                                 ITEM_NAMES[item]
                     m 'button',
                         onclick: ->
-                            localStorage.clear()
-                            alert('Save game deleted')
-                            window.location.href = ''
+                            if confirm('Are you sure you want to restart the game? This will clear all progress and items you have achieved so far.')
+                                localStorage.clear()
+                                alert('Save game deleted')
+                                window.location.href = ''
                         'Restart game'
                 ]
 

@@ -185,13 +185,16 @@ Type <strong>"help"</strong> to see this menu again<br>
             if not @hasItem('cuttlefish')
                 @print('Look, there be some cuttlefish, though they do not look too cuddly. Steak and Shake is to the west, Achtipus\'s garden to the north, and Wale to the east.')
             else
-                @print('There used to be cuttlefish here but you scared them away with your aggressive affections. Keep that stuff inside man!')
+                @print('There used to be cuttlefish here but you scared them away with your aggressive affections. Keep that stuff inside man! Steak and Shake is to the west, Achtipus\'s garden to the north, and Wale to the east.')
         else if @matches('cuddle cuttlefish')
             if not @hasItem('cuttlefish')
                 @print('You are feeling affectionate today and you just got dumped so why not? You jump some of the cuttlefish and start snuggling and cuddling. The cuttlefish are not amused though, and say they are tired of fish making that mistake. They all swim away except for one that has attached its suckers to your mid region. You don\'t seem to mind.')
                 @getItem('cuttlefish')
             else
                 @print('They are cuddled out.')
+
+        else if @matches('look cuttlefish')
+            @print('Oh, cuttlefish, those are freaky.')
 
         else if @matches('east')
             @goToRoom('Wale')
@@ -204,9 +207,12 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Billy Ocean', ->
-        if @exactlyMatches('enter') or @exactlyMatches('look')
+        if @exactlyMatches('enter') and not @flagIs('watched_billy_video', true)
             window.open('https://www.youtube.com/watch?v=zNgcYGgtf8M', '_blank')
+
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Suddenly, appearing before your eyes is singer-songwriter and former Caribbean king: Billy Ocean. Also Billy Ocean\'s car. Obvious exits are west to Wale and north to some kind of game show.')
+
         else if @matches('talk')
             @print('He wants you to get into his car and drive him to the hospital. He just drove through the car wash with the top down after dropping some acid.')
         else if @matches('hospital')
@@ -304,10 +310,10 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Steak and Shake (Kitchen)', ->
         if @exactlyMatches('enter') or @exactlyMatches('look')
-            @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.')
+            @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range. South leads back to the main entry area.')
         else if @matches('look oven') or @matches('open oven')
             if not @hasItem('soda')
-                @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda?')
+                @print('Check it out, it\'s your favorite pop, a Cherry Orange Snozzberry Lime Passionfruit Vanilla Croak in the oven. Who ever thought of baking a can of soda? South leads back to the main entry area.')
             else
                 @print('The oven is empty.')
 
@@ -395,7 +401,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Steak and Shake (Soda Fountain)', ->
         if @exactlyMatches('enter') or @exactlyMatches('look')
-            @print('You see that the soda fountain has somehow remained largely undamaged. You think back to the days when you would sneak out bags of plain syrup to drink and the freakish waking dreams it would induce in you. You wonder if there is any still in there.')
+            @print('You see that the soda fountain has somehow remained largely undamaged. You think back to the days when you would sneak out bags of plain syrup to drink and the freakish waking dreams it would induce in you. You wonder if there is any still in there. The East door goes back to the main area.')
         else if @matches('look fountain') or @matches('open fountain') or @matches('look soda') or @matches('open soda')
             @print('Avast, a hidden treasure trove of sugary wonder that has lain dormant all these years! You tremble at the beauty of the sight before you. So many bags and yet your magic hammerspace satchel will only allow for one. There\'s Spritz, Professor Ginger, Cactus Lager, and Ms. Shim Sham\'s Maple Soda.')
 
