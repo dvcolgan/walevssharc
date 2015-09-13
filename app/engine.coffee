@@ -112,12 +112,12 @@ module.exports = class Engine
 
     goToRoom: (roomName) ->
         @currentRoomName = roomName
-        @doCommand('look')
+        @doCommand('enter')
         @notify()
 
     goToStart: ->
         @currentRoomName = @startRoom
-        @doCommand('look')
+        @doCommand('enter')
         @notify()
 
     setFlag: (flagName, value) ->

@@ -81,10 +81,9 @@ module.exports =
     ]
     attack: [
         'fight'
-        'attack goblin'
-        'fight goblin'
         'punch'
         'bite'
+        'intervene'
     ]
     badge: [
         'sherrif'

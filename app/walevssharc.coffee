@@ -70,6 +70,12 @@ Type <strong>"help"</strong> to see this menu again<br>
         else if @matches('look pancakes') and @hasItem('pancakes')
             @print('Mystical pancakes you made with an enchanted recipe and totally not the correct ingredients, remember? That was UH-may-zing! Take them to Wale and hurry.')
 
+        else if @matches('look milk') and @hasItem('milk')
+            @print('Whole milk, apparently from a real sea cow. Is it still okay to call them that?')
+
+        else if @matches('look quadratic eye') and @hasItem('quadratic eye')
+            @print('???')
+
         else if @matches('look')
             @print('I am not authorized to tell you about that yet. Stop trying to cheat man!')
 
@@ -114,7 +120,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @goToRoom('Ocean')
 
     engine.addRoom 'Ocean', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('You find yourself in the ocean. You are a shark by the name of Sharc and your $23 shampoo is missing. You suspect foul play. Welcome to the ocean, it is a big blue wet thing and also your home. Obvious exits are North to your friend Wale.')
         else if @matches('north')
             @goToRoom('Wale')
@@ -123,7 +129,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Wale', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Hey, it is your friend, Wale. He is doing that thing where he has his eyes closed and acts like he did not notice your arrival. He is kind of a prick, but also your friend. What can you do? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.')
 
         else if @matches('give pancakes')
@@ -161,7 +167,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Wetter Ocean', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('This is just some ocean you found. It does feel a little bit wetter than the rest of the ocean though. Also, did it just get warmer? Obvious exits are a garden to the west, Wale in the south, and a gameshow east.')
 
         else if @matches('south')
@@ -175,7 +181,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Cuttlefish', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             if not @hasItem('cuttlefish')
                 @print('Look, there be some cuttlefish, though they do not look too cuddly. Steak and Shake is to the west, Achtipus\'s garden to the north, and Wale to the east.')
             else
@@ -198,7 +204,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Billy Ocean', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             window.open('https://www.youtube.com/watch?v=zNgcYGgtf8M', '_blank')
             @print('Suddenly, appearing before your eyes is singer-songwriter and former Caribbean king: Billy Ocean. Also Billy Ocean\'s car. Obvious exits are west to Wale and north to some kind of game show.')
         else if @matches('talk')
@@ -218,12 +224,12 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Achtipus\'s Garden', ->
-        if @matches('look achtipus')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
+            @print('Achtipus is working among his flowers and shrubs. He sees you and opens the gate for you. Obvious exits are north to Water World, east to some Ocean and south to a school of Cuttlefish.')
+        else if @matches('look achtipus')
             @print('It\'s Achtipus. He is pulling out the seaweeds from his sea cucumber bed.')
         else if @matches('look garden')
             @print('You see watermelon, water chestnuts, assorted flowers, sea cucumbers and strawberries.')
-        else if @exactlyMatches('look')
-            @print('Achtipus is working among his flowers and shrubs. He sees you and opens the gate for you. Obvious exits are north to Water World, east to some Ocean and south to a school of Cuttlefish.')
         else if @matches('talk')
             @print('"This is quite the um...ocean hideaway you have here," you say. "Yes," he says, "I can see you have come a long way to get here, but I am glad you have found refuge on my grounds. If you see anything you like in my plot we could make a deal perhaps."')
 
@@ -259,8 +265,11 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Steak and Shake', ->
-        if @exactlyMatches('look')
-            @print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past. It\'s the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.')
+        if @exactlyMatches('enter')
+            @print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past.')
+        else if @exactlyMatches('look')
+            @print("It's the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.")
+
         else if @matches('west') or @matches('open door') or @matches('enter') or @matches('in')
             @goToRoom('Steak and Shake (Doorway)')
 
@@ -271,7 +280,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             
 
     engine.addRoom 'Steak and Shake (Doorway)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('As you approach, the door falls clean off as if to warn you against entry. Never being one for omens, you ignore it. Inside you discover things much as you remember them. That is, if they had been mauled by a bear with blenders for hands who proceeded to set off a series of plastic explosives. To the south there are some tables and chairs, north lies the kitchen, and west a soda fountain. The outdoors is east.')
 
         else if @matches('south')
@@ -286,7 +295,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Dining Area)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('A dilapidated dining area lies before you. It is completely unremarkable. There is nowhere to go besides north to the way you came.')
         else if @matches('north')
             @goToRoom('Steak and Shake (Doorway)')
@@ -294,7 +303,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Kitchen)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Welcome to the kitchen. Since the walls have all been blown away or dissolved, the only thing that separates it from the rest of the place is the oven and range.')
         else if @matches('look oven') or @matches('open oven')
             if not @hasItem('soda')
@@ -319,7 +328,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('"Where do I start?" you wonder out loud. If only there were written series of instructions guiding you through. Where would you find something like that?')
             @wait =>
                 @print('You\'re pondering this when a draft comes over you. The lights flicker on and off. You sense a mysterious presence. The ghost of your old friend Creggles appears before you. Apparently he is haunting the Steak and Shake now and you\'re all like "Creggles, didn\'t we just hang out the other day? How are you a ghost already?"')
@@ -333,7 +342,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with an empty bowl sitting there)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('In an urn take but not churn items two not like goo.')
         else if @matches('soda flower')
             @removeItem('flowers')
@@ -343,7 +352,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of powder sitting there)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Your potion is dry. This willst not fly. What\'s next must be dumped, poured and cracked for a proper flapjack.')
         else if @matches('milk egg butter')
             @removeItem('egg')
@@ -354,7 +363,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Cutting and scooping shall have their day, but a for a fine fluffy batter there be but one way.')
         else if @matches('stir')
             @goToRoom('Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)')
@@ -364,7 +373,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Set the griddle or stove to medium heat. After it is warmed, drop batter a quarter cup at a time and turning once until bubbles appear. "Well that seems pretty clear. I think I can do that on my own."')
             @wait =>
                 @goToRoom('Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)')
@@ -372,7 +381,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Ten minutes later the pancakes are finished, but something is missing.')
         else if @matches('syrup')
             @removeItem('syrup')
@@ -385,7 +394,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Steak and Shake (Soda Fountain)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('You see that the soda fountain has somehow remained largely undamaged. You think back to the days when you would sneak out bags of plain syrup to drink and the freakish waking dreams it would induce in you. You wonder if there is any still in there.')
         else if @matches('look fountain') or @matches('open fountain') or @matches('look soda') or @matches('open soda')
             @print('Avast, a hidden treasure trove of sugary wonder that has lain dormant all these years! You tremble at the beauty of the sight before you. So many bags and yet your magic hammerspace satchel will only allow for one. There\'s Spritz, Professor Ginger, Cactus Lager, and Ms. Shim Sham\'s Maple Soda.')
@@ -401,7 +410,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Seal or No Seal', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('You just walked onto the set of the wildly popular game show, "Seal or No Seal!" Where flamboyant contestants flail around and shout while trying to arrive at the answer to that age old question...SEAL OR NO SEAL? To the east is backstage, north will take you to the dressing room, west or south will take you back wherever you came from.')
 
         else if @matches('north')
@@ -422,7 +431,7 @@ Type <strong>"help"</strong> to see this menu again<br>
         step3 = 'Accessorize! Pick from a fake beard, a gun belt, a metal chain, and a rubber chicken.'
         done = 'You look absolutely horrible! Or amazing, depending on your perspective. But the true judge will be the game show manager.'
 
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('This place is great! It would be easy to cobble together a costume to get on that show. Lets see what we can find. Obvious exits are south to the show entrance.')
         
         else if @matches('south')
@@ -431,42 +440,42 @@ Type <strong>"help"</strong> to see this menu again<br>
         else if @matches('costume')
             @print(step1)
 
-        else if @matches('take cowboy hat')
+        else if @matches('cowboy hat')
             @getItem('cowboy hat')
             @print(step2)
-        else if @matches('take rainbow wig')
+        else if @matches('rainbow wig')
             @getItem('rainbow wig')
             @print(step2)
-        else if @matches('take motorcycle helmet')
+        else if @matches('motorcycle helmet')
             @getItem('motorcycle helmet')
             @print(step2)
-        else if @matches('take stovepipe hat')
+        else if @matches('stovepipe hat')
             @getItem('stovepipe hat')
             @print(step2)
 
-        else if @matches('take leather jacket')
+        else if @matches('leather jacket')
             @getItem('leather jacket')
             @print(step3)
-        else if @matches('take clown suit')
+        else if @matches('clown suit')
             @getItem('clown suit')
             @print(step3)
-        else if @matches('take oldtimey suit')
+        else if @matches('oldtimey suit')
             @getItem('oldtimey suit')
             @print(step3)
-        else if @matches('take cow vest') or @matches('take print vest')
+        else if @matches('cow vest') or @matches('print vest')
             @getItem('cow print vest')
             @print(step3)
 
-        else if @matches('take fake beard')
+        else if @matches('fake beard')
             @getItem('fake beard')
             @print(done)
-        else if @matches('take gun belt')
+        else if @matches('gun belt')
             @getItem('gun belt')
             @print(done)
-        else if @matches('take metal chain')
+        else if @matches('metal chain')
             @getItem('metal chain')
             @print(done)
-        else if @matches('take rubber chicken')
+        else if @matches('rubber chicken')
             @getItem('rubber chicken')
             @print(done)
         else
@@ -514,7 +523,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Seal or No Seal (Backstage)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('This is the stage. It is just as stupid looking as the rest of the show. Obvious exits are west to the show\'s entrance. The show manager stares at you questioningly.')
 
         else if @matches('talk manager')
@@ -538,7 +547,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Seal or No Seal (On Stage!)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('"Welcome back to the Seal or No Seal, the most popular game show under the sea! I\'m your well tanned host Jerry Zintervanderbinderbauer Jr. Let\'s meet our next contestant: Sharc! An incredibly obnoxious yet persuasive young ocean dweller, he loves annoying his friends and is always up for a round of Scrabble, LADIES. Time to get started. Now, Sharc I am going to present you with a briefcase. In this briefcase, there might be a seal or there might not be a seal. And I need you to tell me which it is: SEAL or NO SEAL?"')
 
         else if @matches('no seal')
@@ -557,7 +566,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('Oh man, Water World! You love that movie. Kevin Costner should have totally gotten the Oscar. Wait this isn\'t like that. This is Water World, the home of that stupid killer whale, Shampu. What a hack! Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
 
         else if @matches('north')
@@ -571,7 +580,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World (Manatee Exhibit)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('And there it is: The illustrious manatee. You can see why the stands are empty. There are big umbrellas attached to some picnic tables; not much to see. Obvious exits are west to the Manatee service room and south to the park entrance.')
 
         else if @matches('take umbrella')
@@ -587,7 +596,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World (Gift Shop)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('You enter the Water World gift shop. There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? West to the park entrance.')
 
         else if @matches('take badge')
@@ -604,7 +613,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World (Mechanical Room Type Place)', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('What in the name of Captain Nemo is this? There are manatees in hoists all over the room hooked up to...milking devices. This is no mechanical room! It\'s a cover for a secret, illegal, underground, black market, but probably organic, sea cow milking operation. The fiends! You are going to blow the lid off this thing for sure. The sweaty old fish running the machinery has not noticed you yet. Obvious exits are east to the manatee exhibit.')
         else if @matches('talk') or @match('badge') or @match('sticker')
             if not @hasItem('badge')
@@ -620,24 +629,53 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'The Ethereal Realm', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter') or @exactlyMatches('look')
             @print('You have entered The Ethereal Realm. Why did you do that? That was a bad decision. Wale is at your side. There are a bunch of weird, spacey platforms and junk floating around in a cosmic void -- your typical surrealist dreamscape environment. Ahead is an ugly monster. He is clutching something in his hand. Obvious exits are NONE! This is the world of waking nightmares you dingus.')
         else if @matches('talk monster')
-            @print('You are getting worse at this game. You approach said monster in an effort to get some leads on your precious hair product. Maybe start by asking him about the status of the local basketball team or something? On closer examination though, you realize this is not just any monster. It is a Torumekian hyper goblin. And in his grisly paw rests the item of your quest, your $23 shampoo. "Sharc, we can not allow him to use that shampoo," whispers your companion. "On the head of a hyper goblin, hair that smooth could mean the end of fashion as we know it. We must retrieve it by any means necessary." No sooner have the words left Wale\'s lips that you are spotted. That is all the motivation this beast needs. He flips the cap on the bottle, raising it to the filthy, string-like mop you can only assume must be his hair, all the while gazing down at you in defiance with his single blood shot eye. Do something!')
+            @print('You are getting worse at this game. You approach said monster in an effort to get some leads on your precious hair product. Maybe it would have been a better idea to start by just asking him about the status of the local basketball team or something?')
+            @wait =>
+                @print('On closer examination though, you realize this is not just any monster. It is a Torumekian hyper goblin. And in his grisly paw rests the item of your quest: your $23 shampoo!')
+                @wait =>
+                    @print('"Sharc, we can not allow him to use that shampoo," whispers your companion. "On the head of a hyper goblin, hair that smooth could mean the end of fashion as we know it. We must retrieve it by any means necessary."')
+                    @wait =>
+                        @print('No sooner have the words left Wale\'s lips than you are spotted. That is all the motivation this beast needs. He flips the cap on the bottle, raising it to the filthy, string-like mop you can only assume must be his hair, all the while gazing down at you in defiance with his single blood shot eye.')
+                        @wait =>
+                            @goToRoom('The Ethereal Realm (Do something!)')
+        else
+            @tryUniversalCommands()
+
+    engine.addRoom 'The Ethereal Realm (Do something!)', ->
+        if @exactlyMatches('enter') or @exactlyMatches('look')
+            @print('Do something!')
+        else if @exactlyMatches('something')
+            @print('Oh very funny.  Now is definitely not the time for snark.')
 
         else if @matches('attack')
-            @print('You start to lunge towards the creature, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.  "Now Sharc!", he wheezes, "Use the power of the Quadratic Eye." "But you said I wasn\'t ready!" you cry, trying not to look at the sorry state of your friend. "No, it was I who was not ready. The p-power has always been within y-you."')
+            @print('You start to lunge towards the creature, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.')
+            @wait =>
+                @print('"Now Sharc!", he wheezes, "Use the power of the Quadratic Eye."')
+                @wait =>
+                    @print('"But you said I wasn\'t ready!" you cry, trying not to look at the sorry state of your friend.')
+                    @wait =>
+                        @print('"No, it was I who was not ready. The p-power has always been within y-you."')
+                        @wait =>
+                            @getItem('quadratic eye')
+                            @goToRoom('The Ethereal Realm (Use the Quadratic Eye!)')
+        else
+            @tryUniversalCommands()
 
-        else if @matches('use quadratic eye')
+    engine.addRoom 'The Ethereal Realm (Use the Quadratic Eye!)', ->
+        if @matches('use quadratic eye')
+            @removeItem('quadratic eye')
             @goToRoom('End')
-
         else
             @tryUniversalCommands()
 
 
     engine.addRoom 'End', ->
-        if @exactlyMatches('look')
+        if @exactlyMatches('enter')
             @print('You remove the Quadratic Eye from its compartment, close your eyes and allow union between your spirit and the universal chi flow. Then the goblin gets cut in half and you get your shampoo back.')
 
 
-    engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
+    #engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
+    engine.setStartRoom('The Ethereal Realm')
