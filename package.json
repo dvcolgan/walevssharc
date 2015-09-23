@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "watch": "watchify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js -dv",
-    "build": "browserify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js"
+    "build": "browserify app/main.coffee -g coffeeify --extension .js --extension .coffee -o app/assets/bundle.js",
+    "test": "coffee app/tests.coffee"
   },
   "repository": {
     "type": "git",

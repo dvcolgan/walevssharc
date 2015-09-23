@@ -24,6 +24,8 @@ There are other commands too and some you can just click on a button to use. Exp
 Type <strong>"help"</strong> to see this menu again<br>
 """
 
+    engine.setAlreadyGottenMessage('What are you crazy, why would you need more/another of that/those?')
+
     engine.setUniversalCommands ->
         if @matches('die')
             @print('What are you doing? You are dead now.')
@@ -75,7 +77,6 @@ Type <strong>"help"</strong> to see this menu again<br>
 
         else if @matches('look quadratic eye') and @hasItem('quadratic eye')
             @print('???')
-
 
         else if @matches('look cowboy hat') and @hasItem('cowboy hat')
             @print('Nice hat, pilgrim.')
@@ -290,28 +291,55 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Achtipus\'s Garden', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('Achtipus is working among his flowers and shrubs. He sees you and opens the gate for you. Obvious exits are north to Water World, east to some Ocean and south to a school of Cuttlefish.')
+            if @comingFrom(['Achtipus\'s Garden (Inside)'])
+                @print('You leave the garden. Obvious exits are west to the inside of the garden, north to Water World, east to some Ocean and south to a school of Cuttlefish.')
+            else if @isFirstTimeEntering()
+                @print('Achtipus is working among his flowers and shrubs. He sees you and opens the gate for you. Obvious exits are west to the inside of the garden, north to Water World, east to some Ocean and south to a school of Cuttlefish.')
+            else
+                @print('Achtipus is still working hard in that garden. You need to get him a girlfriend, and then he needs to get YOU a girlfriend. Obvious exits are west to the inside of the garden, north to Water World, east to some Ocean and south to a school of Cuttlefish.')
         else if @matches('look achtipus')
             @print('It\'s Achtipus. He is pulling out the seaweeds from his sea cucumber bed.')
+
+        else if @matches('north')
+            @goToRoom('Water World')
+        else if @matches('west') or @matches('enter')
+            @goToRoom('Achtipus\'s Garden (Inside)')
+        else if @matches('east')
+            @goToRoom('Wetter Ocean')
+        else if @matches('south')
+            @goToRoom('Cuttlefish')
+        else
+            @tryUniversalCommands()
+
+
+    engine.addRoom 'Achtipus\'s Garden (Inside)', ->
+        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+            @print('You enter the garden and see a bountify display unfold before you.')
+
+        else if @matches('talk')
+            if not @flagIs('talked_to_achtipus', true)
+                @print('"This is quite the um...ocean hideaway you have here," you say. "Yes," he says, "I can see you have come a long way to get here, but I am glad you have found refuge on my grounds. If you see anything you like in my plot we could make a deal perhaps."')
+            else
+                @print('Oh, back again Sharc? Can I interest you in any of the items in my fine garden?')
+
+        else if @matches('look achtipus')
+            @print('It\'s Achtipus. He is pulling out the seaweeds from his sea cucumber bed.')
+
         else if @matches('look garden')
             @print('You see watermelons, water chestnuts, assorted flowers, sea cucumbers and strawberries.')
-        else if @matches('talk')
-            @print('"This is quite the um...ocean hideaway you have here," you say. "Yes," he says, "I can see you have come a long way to get here, but I am glad you have found refuge on my grounds. If you see anything you like in my plot we could make a deal perhaps."')
-
-        else if @matches('look watermelon')
+        else if @matches('look watermelons') or @matches('take watermelons')
             @print('You only eat seedless and these are the extra seed variety.')
-        else if @matches('look nuts') or @matches('look nut') or @matches('look chestnuts') or @matches('look chestnut')
+        else if @matches('look chestnuts') or @matches('take chestnuts')
             @print('Water chestnuts? Is that even a thing?')
-        else if @matches('look cucumber') or @matches('look cucumbers')
+        else if @matches('look cucumbers') or @matches('take cucumbers')
             @print('Soak it in brine for a couple weeks, then come back to me.')
-        else if @matches('look strawberries')
+        else if @matches('look strawberries') or @matches('take strawberries') or @matches('look strawberry') or @matches('take strawberry')
             @print('You sense a surrealistic vibe coming from those strawberries.')
 
-        else if @matches('look flowers') or @matches('look flower')
+        else if @matches('look flowers')
             @print('You spend too much time at the gym and the firing range to appreciate flowers.')
 
-
-        else if @matches('take flowers') or @matches('take flower')
+        else if @matches('take flowers')
             if not @flagIs('given_umbrella', true)
                 @print('"I can see you like the flowers. I will let you have them if you can find something to keep it from getting so hot here. I would be able to do twice as much work if it were a bit cooler."')
             else
@@ -323,12 +351,8 @@ Type <strong>"help"</strong> to see this menu again<br>
             @removeItem('umbrella')
             @setFlag('given_umbrella', true)
 
-        else if @matches('north')
-            @goToRoom('Water World')
-        else if @matches('east')
-            @goToRoom('Wetter Ocean')
-        else if @matches('south')
-            @goToRoom('Cuttlefish')
+        else if @matches('east') or @matches('exit')
+            @goToRoom('Achtipus\'s Garden')
         else
             @tryUniversalCommands()
 
@@ -498,8 +522,13 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Seal or No Seal', ->
-        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('You just walked onto the set of the wildly popular game show, "Seal or No Seal!" Where flamboyant contestants flail around and shout while trying to arrive at the answer to that age old question...SEAL OR NO SEAL? To the east is backstage, north will take you to the dressing room, west or south will take you back wherever you came from.')
+        if @exactlyMatches('__enter_room__')
+            if @isFirstTimeEntering()
+                @print('You just walked onto the set of the wildly popular game show, "Seal or No Seal!" Where flamboyant contestants flail around and shout while trying to arrive at the answer to that age old question...SEAL OR NO SEAL? To the east is backstage, north will take you to the dressing room, west to some ocean, and south to Billy Ocean.')
+            else
+                @print('You are on the set for Seal or no Seal, the game show. You just realized you must find a way to become a contestant or your life will have been wasted. To the east is backstage, north will take you to the dressing room, west to some ocean, and south to Billy Ocean.')
+        else if @exactlyMatches('look')
+            @print('Oh wow! Seal or no Seal! You love it when the host looks right at the camera and says that. It’s so intense. There has to be some way to get on this show. To the east is backstage, north will take you to the dressing room, west to some ocean, and south to Billy Ocean.')
 
         else if @matches('north')
             @goToRoom('Seal or No Seal (Dressing Room)')
@@ -514,34 +543,42 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Seal or No Seal (Dressing Room)', ->
-        step1 = 'Let\'s start with headgear. You see a cowboy hat, a rainbow wig, a motorcycle helmet, and a stovepipe hat.'
         step2 = 'Now select a set of clothes. You see a leather jacket, a clown suit, an oldtimey suit with one of those Colonel Sanders ties, and a cow print vest.'
         step3 = 'Accessorize! Pick from a fake beard, a gun belt, a metal chain, and a rubber chicken.'
         done = 'You look absolutely horrible! Or amazing, depending on your perspective. But the true judge will be the game show manager.'
 
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('This place is great! It would be easy to cobble together a costume to get on that show. Lets see what we can find. Obvious exits are south to the show entrance.')
+
         
         else if @matches('south')
             @goToRoom('Seal or No Seal')
 
         else if @matches('costume')
-            @print(step1)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Headgear)')
+
+    engine.addRoom 'Seal or No Seal (Dressing Room - Pick Headgear)', ->
+        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+            @print('Let\'s start with headgear. You see a cowboy hat, a rainbow wig, a motorcycle helmet, and a stovepipe hat.')
 
         else if @matches('cowboy hat')
             @getItem('cowboy hat')
-            @print(step2)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Clothes)')
+
         else if @matches('rainbow wig')
             @getItem('rainbow wig')
-            @print(step2)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Clothes)')
+
         else if @matches('motorcycle helmet')
             @getItem('motorcycle helmet')
-            @print(step2)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Clothes)')
+
         else if @matches('stovepipe hat')
             @getItem('stovepipe hat')
-            @print(step2)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Clothes)')
 
-        else if @matches('leather jacket')
+    engine.addRoom 'Seal or No Seal (Dressing Room - Pick Clothes)', ->
+        if @matches('leather jacket')
             @getItem('leather jacket')
             @print(step3)
         else if @matches('clown suit')
@@ -644,7 +681,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @goToRoom('Seal or No Seal (Backstage)')
 
         else if @matches('seal')
-            alert('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then excitedly pulls it all the way open. "He\'s right people! Now, let\'s see your prizes." "Prizes is right Jerry," says a voice coming from nowhere and everywhere all at once. "Here are some world class selections I picked up from the grocery store on the way here this morning: Success comes in cans, not in can nots. Tin cans that is! That\'s why we are offering you the choice of a full week\'s supply of \'Captain Ned\'s Pickled Herring\', or \'No Ifs Ands or Butter\' brand margarine spread product for your consumption pleasure.  Naturally you choose the margarine because you are health conscious or something.')
+            alert('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then excitedly pulls it all the way open. "He\'s right people! Now, let\'s see your prizes." "Prizes is right Jerry," says a voice coming from nowhere and everywhere all at once. "Here are some world class selections I picked up from the grocery store on the way here this morning: Success comes in cans, not in can nots. Tin cans that is! That\'s why we are offering you the choice of a full week\'s supply of \'Captain Ned\'s Pickled Herring\', or \'No Ifs Ands or Butter\' brand margarine spread type product for your consumption pleasure.  Naturally you choose the margarine because you are health conscious or something.')
             removeAllCostumeItems(@)
             @getItem('margarine')
             @goToRoom('Seal or No Seal (Backstage)')
@@ -654,8 +691,15 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World', ->
-        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('Oh man, Water World! You love that movie. Kevin Costner should have totally gotten the Oscar. Wait this isn\'t like that. This is Water World, the home of that stupid killer whale, Shampu. What a hack! Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
+        if @exactlyMatches('__enter_room__')
+            if @comingFrom(['Water World (Manatee Exhibit)', 'Water World (Gift Shop)'])
+                @print('There it is the exit! Just a little bit further and  you can leave, please can we leave now?')
+            else if @isFirstTimeEntering()
+                @print('Oh man, Water World! You love that movie. Kevin Costner should have totally gotten the Oscar. Wait this isn\'t like that. This is Water World, the home of that stupid killer whale, Shampu. What a hack! Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
+            else
+                @print('Oh great, Water World again. You were hoping once would be enough to last you a lifetime. Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
+        else if @exactlyMatches('look')
+            @print('Well, this is it the Water World entrance where all your marine dreams and nightmares come true. Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
 
         else if @matches('north')
             @goToRoom('Water World (Manatee Exhibit)')
@@ -668,12 +712,20 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World (Manatee Exhibit)', ->
-        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('And there it is: The illustrious manatee. You can see why the stands are empty. There are big umbrellas attached to some picnic tables; not much to see. Obvious exits are west to the Manatee service room and south to the park entrance.')
+        if @exactlyMatches('__enter_room__')
+            if @isFirstTimeEntering()
+                @print('And there it is: The illustrious manatee. You can see why the stands are empty. There are big umbrellas attached to some picnic tables; not much to see. Obvious exits are west to the Manatee service room and south to the park entrance.')
+            else
+                @print('Well, the manatee exhibit is still a dump. A bunch of tourist families are devouring their food at some tables with umbrellas.')
 
+        else if @exactlyMatches('look')
+            @print('There is big wooden arch display with lots of peeling paint surrounded by your standard semicircle stone seating arrangement. Some picnic tables with umbrellas are nearby.')
+
+        else if @matches('look umbrella')
+            @print('What, you have never seen an umbrella? They are red and white and covered in algae.')
         else if @matches('take umbrella')
             @getItem('umbrella')
-            @print('Well, okay. You now have an umbrella.')
+            @print('You stealthily approach an empty table and shove its umbrella under your fin and stumble away. Everyone looks at you like this happens a lot.')
 
         else if @matches('west')
             @goToRoom('Water World (Mechanical Room Type Place)')
@@ -684,15 +736,26 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Water World (Gift Shop)', ->
-        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+        if @exactlyMatches('__enter_room__')
             @print('You enter the Water World gift shop. There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? West to the park entrance.')
+        else if @exactlyMatches('look')
+            @print('There are all sorts of great items here: a giant stuffed octopus, dehydrated astronaut fish food, junior marine sheriff badge stickers, and some of that clay sand crap they used to advertise on TV. See anything you like? West to the park entrance.')
+
+        else if @matches('look octopus')
+            @print('Usually you have to knock over a stack of old milk bottles to get stuffed animals of this quality.')
+        else if @matches('look sand')
+            @print('Wow, you remember this stuff. It says on the box its the only-stay-dry sand crap used by Shampu himself.')
+        else if @matches('look badges')
+            @print('Cool! And you don’t even have to complete any classes in junior marine sheriff school.')
+        else if @matches('look fish') or @matches('look food')
+            @print('They have kelp, krill, algae, and ice cream flavors.')
 
         else if @matches('take badge')
             @getItem('badge')
             @print('You take the junior marine sheriff badge stickers to the counter. The cashier says they are on sale, only 15 fish dollars, plus tax. Yussss. You pay the man.')
 
         else if @matches('take')
-            @print('You take that item to the counter. The cashier says it is ' + (18 + Math.floor(Math.random() * 30)).toString() + ' fish dollars but you only have 17 fish dollars. Nuts.')
+            @print('You take that item to the counter. The cashier says it is ' + (18 + Math.floor(Math.random() * 30)).toString() + " fish dollars but you only have #{if @hasItem('badge') then 2 else 17} fish dollars. Nuts.")
 
         else if @matches('west')
             @goToRoom('Water World')
@@ -702,7 +765,18 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Water World (Mechanical Room Type Place)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('What in the name of Captain Nemo is this? There are manatees in hoists all over the room hooked up to...milking devices. This is no mechanical room! It\'s a cover for a secret, illegal, underground, black market, but probably organic, sea cow milking operation. The fiends! You are going to blow the lid off this thing for sure. The sweaty old fish running the machinery has not noticed you yet. Obvious exits are east to the manatee exhibit.')
+            if @isFirstTimeEntering()
+                @print('What in the name of Captain Nemo is this? There are manatees in hoists all over the room hooked up to...milking devices. This is no mechanical room! It\'s a cover for a secret, illegal, underground, black market, but probably organic, sea cow milking operation. The fiends! You are going to blow the lid off this thing for sure. The sweaty old fish running the machinery has not noticed you yet. Obvious exits are east to the manatee exhibit.')
+            else if not @hasItem('badge')
+                @print('That sweaty old fish is still going at it with his manatee milking. You wonder if there is any kind of authority he would bow to. Obvious exits are east to the manatee exhibit.')
+            else if not @hasItem('milk')
+                @print('That sweaty old fish is still going at it with his manatee milking. You feel just a fragment of guilt for not turning him in. Obvious exits are east to the manatee exhibit.')
+            else
+                @print('There doesn\'t seem to be anything you can do to put a stop to this horrible sight. At least you got something out of it though. Obvious exits are east to the manatee exhibit.')
+
+        else if @exactlyMatches('look')
+            @print('Manatees from the exhibit are all over in hoists rigged up to milking equipment. It\'s illegal, but you have heard there is a fortune in genuine sea cow milk. That nasty old fish there is running the whole thing.')
+
         else if @matches('talk') or @matches('badge') or @matches('sticker')
             if not @hasItem('badge')
                 @print('You swim up to the fish at the controls. "I am going to shut you down!" You shout at him. He laughs heartily. "You don\'t stand a chance. You\'re just a regular guy. I\'m the mayor of Water World. Who is going to believe you?" He goes back to his work paying you no mind. He has a point.')

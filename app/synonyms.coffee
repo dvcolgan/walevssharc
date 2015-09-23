@@ -81,3 +81,12 @@ module.exports =
         'sherrif'
         'sticker'
     ]
+    enter: [
+        'in'
+        'inside'
+    ]
+    exit: [
+        'leave'
+        'out'
+        'outside'
+    ]

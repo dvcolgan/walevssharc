@@ -46,10 +46,9 @@ class TextTyper
             setTimeout(@typeLoop, 6)
 
     setMessage: (message) ->
-        if message != @currentMessage
-            @currentMessage = message
-            @i = 0
-            setTimeout(@typeLoop, 6)
+        @currentMessage = message
+        @i = 0
+        setTimeout(@typeLoop, 6)
 
     showAll: ->
         @i = @currentMessage.length - 1

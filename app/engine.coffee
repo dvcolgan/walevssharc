@@ -18,8 +18,10 @@ module.exports = class Engine
 
         @callbacks = []
         @startRoom = ''
+        @lastRoom = ''
 
         @waitCallback = null
+        @alreadyGottenMessage = ''
 
         @previousCommands = []
 
@@ -28,6 +30,9 @@ module.exports = class Engine
 
     setAfterCommand: (callback) ->
         @afterCommand = callback.bind(@)
+
+    setAlreadyGottenMessage: (msg) ->
+        @alreadyGottenMessage = msg
 
     save: ->
         localStorage.setItem 'progress', JSON.stringify({
@@ -83,6 +88,12 @@ module.exports = class Engine
 
         @commandWords = @commandText.split(' ')
 
+        if 'take' in @commandWords
+            for word in @commandWords
+                if @hasItem(word)
+                    @print(@alreadyGottenMessage)
+                    return
+
         @rooms[@currentRoomName]()
         @afterCommand()
 
@@ -97,12 +108,20 @@ module.exports = class Engine
 
     matches: (pattern) ->
         # If each word in the spec command is found
-        # anywhere in the user's input it's a match
+        # anywhere in the user's input it's a match,
+        # including substrings of words
         patternWords = pattern.split(' ')
         for patternWord in patternWords
-            if not (patternWord in @commandWords)
+            found = false
+            for commandWord in @commandWords
+                if patternWord.includes(commandWord)
+                    found = true
+            if not found
                 return false
         return true
+
+    #pattern: take balls
+    #command: take the ball
 
     hasItem: (item) -> item of @inventory
     usedItem: (item) -> item of @inventory and @inventory[item] == 'used'
@@ -111,14 +130,16 @@ module.exports = class Engine
 
     flagIs: (flagName, value) -> @flags[flagName] == value
 
-    isFirstTimeEntering: ->
-        return @roomsEntered[@currentRoomName] == 1
+    isFirstTimeEntering: -> @roomsEntered[@currentRoomName] == 1
+
+    comingFrom: (rooms) -> @lastRoom in rooms
 
     print: (text) ->
         @message = text
         @notify()
 
     goToRoom: (roomName) ->
+        @lastRoom = @currentRoomName
         @currentRoomName = roomName
         if roomName of @roomsEntered
             @roomsEntered[roomName]++
