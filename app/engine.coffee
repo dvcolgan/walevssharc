@@ -66,6 +66,8 @@ module.exports = class Engine
     getInventory: -> JSON.parse(JSON.stringify(@inventory))
 
     doCommand: (@commandText) ->
+        if @commandText == '' then return
+
         if @waitCallback?
             callback = @waitCallback
             @waitCallback = null
@@ -75,16 +77,18 @@ module.exports = class Engine
         @previousCommands.push(@commandText)
 
         # clean up the command text
-        @commandText = @commandText
+        @commandText = ' ' + @commandText
             .trim()
             .toLowerCase()
             .replace(/\W+/g, ' ')
-            .replace(/\s{2,}/g, ' ')
+            .replace(/\s{2,}/g, ' ') + ' '
 
         # find synonyms and replace them with the canonical word
         for cannonicalWord, synonyms of synonymData
             for synonym in synonyms
-                @commandText = @commandText.replace(synonym, cannonicalWord)
+                @commandText = @commandText.replace(" #{synonym} ", " #{cannonicalWord} ")
+
+        @commandText = @commandText.trim()
 
         @commandWords = @commandText.split(' ')
 
@@ -114,14 +118,11 @@ module.exports = class Engine
         for patternWord in patternWords
             found = false
             for commandWord in @commandWords
-                if patternWord.includes(commandWord)
+                if patternWord.startsWith(commandWord) and (commandWord.length >= 4 or patternWord.length <= 4)
                     found = true
             if not found
                 return false
         return true
-
-    #pattern: take balls
-    #command: take the ball
 
     hasItem: (item) -> item of @inventory
     usedItem: (item) -> item of @inventory and @inventory[item] == 'used'

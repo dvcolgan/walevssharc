@@ -453,7 +453,7 @@ Type <strong>"help"</strong> to see this menu again<br>
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of powder sitting there)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('Your potion is dry. This willst not fly. What\'s next must be dumped, poured and cracked for a proper flapjack.')
-        else if @matches('milk egg butter')
+        else if @matches('milk egg margarine')
             @removeItem('egg')
             @removeItem('milk')
             @removeItem('margarine')
@@ -543,13 +543,8 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'Seal or No Seal (Dressing Room)', ->
-        step2 = 'Now select a set of clothes. You see a leather jacket, a clown suit, an oldtimey suit with one of those Colonel Sanders ties, and a cow print vest.'
-        step3 = 'Accessorize! Pick from a fake beard, a gun belt, a metal chain, and a rubber chicken.'
-        done = 'You look absolutely horrible! Or amazing, depending on your perspective. But the true judge will be the game show manager.'
-
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('This place is great! It would be easy to cobble together a costume to get on that show. Lets see what we can find. Obvious exits are south to the show entrance.')
-
         
         else if @matches('south')
             @goToRoom('Seal or No Seal')
@@ -578,31 +573,51 @@ Type <strong>"help"</strong> to see this menu again<br>
             @goToRoom('Seal or No Seal (Dressing Room - Pick Clothes)')
 
     engine.addRoom 'Seal or No Seal (Dressing Room - Pick Clothes)', ->
-        if @matches('leather jacket')
+        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+            @print('Now select a set of clothes. You see a cow print vest, a clown suit, a leather jacket, and an oldtimey suit with one of those Colonel Sanders ties')
+
+        else if @matches('leather jacket')
             @getItem('leather jacket')
-            @print(step3)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
+
         else if @matches('clown suit')
             @getItem('clown suit')
-            @print(step3)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
+
         else if @matches('oldtimey suit')
             @getItem('oldtimey suit')
-            @print(step3)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
+
         else if @matches('cow vest') or @matches('print vest')
             @getItem('cow print vest')
-            @print(step3)
+            @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
+
+    engine.addRoom 'Seal or No Seal (Dressing Room - Pick Accessory)', ->
+        done = 'You look absolutely horrible! Or amazing, depending on your perspective. But the true judge will be the game show manager.'
+
+        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+            @print('Accessorize! Pick from a gun belt, a rubber chicken, a metal chain, and a fake beard.')
 
         else if @matches('fake beard')
             @getItem('fake beard')
             @print(done)
+            @wait =>
+                @goToRoom('Seal or No Seal (Backstage)')
         else if @matches('gun belt')
             @getItem('gun belt')
             @print(done)
+            @wait =>
+                @goToRoom('Seal or No Seal (Backstage)')
         else if @matches('metal chain')
             @getItem('metal chain')
             @print(done)
+            @wait =>
+                @goToRoom('Seal or No Seal (Backstage)')
         else if @matches('rubber chicken')
             @getItem('rubber chicken')
             @print(done)
+            @wait =>
+                @goToRoom('Seal or No Seal (Backstage)')
         else
             @tryUniversalCommands()
 
@@ -614,19 +629,20 @@ Type <strong>"help"</strong> to see this menu again<br>
         group4 = 0
 
         if engine.hasItem('cowboy hat') then group1++
-        if engine.hasItem('rainbow wig') then group1++
-        if engine.hasItem('motorcycle helmet') then group1++
-        if engine.hasItem('stovepipe hat') then group1++
+        if engine.hasItem('cow print vest') then group1++
+        if engine.hasItem('gun belt') then group1++
 
-        if engine.hasItem('leather jacket') then group2++
+        if engine.hasItem('rainbow wig') then group2++
         if engine.hasItem('clown suit') then group2++
-        if engine.hasItem('oldtimey suit') then group2++
-        if engine.hasItem('cow print vest') then group2++
+        if engine.hasItem('rubber chicken') then group2++
 
-        if engine.hasItem('gun belt') then group3++
-        if engine.hasItem('rubber chicken') then group3++
-        if engine.hasItem('fake beard') then group3++
+        if engine.hasItem('motorcycle helmet') then group3++
+        if engine.hasItem('leather jacket') then group3++
         if engine.hasItem('metal chain') then group3++
+
+        if engine.hasItem('stovepipe hat') then group4++
+        if engine.hasItem('oldtimey suit') then group4++
+        if engine.hasItem('fake beard') then group4++
 
         return Math.max(group1, group2, group3, group4)
 
@@ -636,15 +652,15 @@ Type <strong>"help"</strong> to see this menu again<br>
         engine.removeItem('motorcycle helmet')
         engine.removeItem('stovepipe hat')
 
-        engine.removeItem('leather jacket')
-        engine.removeItem('clown suit')
-        engine.removeItem('oldtimey suit')
         engine.removeItem('cow print vest')
+        engine.removeItem('clown suit')
+        engine.removeItem('leather jacket')
+        engine.removeItem('oldtimey suit')
 
         engine.removeItem('gun belt')
         engine.removeItem('rubber chicken')
-        engine.removeItem('fake beard')
         engine.removeItem('metal chain')
+        engine.removeItem('fake beard')
 
 
     engine.addRoom 'Seal or No Seal (Backstage)', ->
@@ -662,8 +678,9 @@ Type <strong>"help"</strong> to see this menu again<br>
                     @print('The show manager looks pleased, yet a touch troubled. "You look to be a man going in the right direction, but we only select the best of the best for Seal or no Seal. Your costume is not quite ready for the big show yet.')
                     removeAllCostumeItems(@)
                 when 1
-                    alert('"Oh, wow!" Exclaims the show manager. "You look absolutely awful. You definitely have the look for our show." You start to dance around, whooping and hollering, declaring yourself the future king of the world. "And I see you have the charisma to match." He turns to his assistant, "Get this fella on stage at once.')
-                    @goToRoom('Seal or No Seal (On Stage!)')
+                    @print('"Oh, wow!" Exclaims the show manager. "You look absolutely awful. You definitely have the look for our show." You start to dance around, whooping and hollering, declaring yourself the future king of the world. "And I see you have the charisma to match." He turns to his assistant, "Get this fella on stage at once.')
+                    @wait =>
+                        @goToRoom('Seal or No Seal (On Stage!)')
 
         else if @matches('west')
             @goToRoom('Seal or No Seal')
@@ -675,17 +692,24 @@ Type <strong>"help"</strong> to see this menu again<br>
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('"Welcome back to the Seal or No Seal, the most popular game show under the sea! I\'m your well tanned host Jerry Zintervanderbinderbauer Jr. Let\'s meet our next contestant: Sharc! An incredibly obnoxious yet persuasive young ocean dweller, he loves annoying his friends and is always up for a round of Scrabble, LADIES. Time to get started. Now, Sharc I am going to present you with a briefcase. In this briefcase, there might be a seal or there might not be a seal. And I need you to tell me which it is: SEAL or NO SEAL?"')
 
-        else if @matches('no seal')
-            alert('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then, wearing a face of practiced disappointment and empathy, whimpers "Too bad," letting the case open the rest of the way. At this, you are promptly ushered off the stage to make way for the next sucker.')
-            removeAllCostumeItems(@)
-            @goToRoom('Seal or No Seal (Backstage)')
-
         else if @matches('seal')
-            alert('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then excitedly pulls it all the way open. "He\'s right people! Now, let\'s see your prizes." "Prizes is right Jerry," says a voice coming from nowhere and everywhere all at once. "Here are some world class selections I picked up from the grocery store on the way here this morning: Success comes in cans, not in can nots. Tin cans that is! That\'s why we are offering you the choice of a full week\'s supply of \'Captain Ned\'s Pickled Herring\', or \'No Ifs Ands or Butter\' brand margarine spread type product for your consumption pleasure.  Naturally you choose the margarine because you are health conscious or something.')
-            removeAllCostumeItems(@)
-            @getItem('margarine')
-            @goToRoom('Seal or No Seal (Backstage)')
-
+            @print('Jerry slowly opens the briefcase, peeking inside first to detect any signs of seal entrails and then...')
+            @wait =>
+                if @percentChance(50)
+                    @print('...wearing a face of practiced disappointment and empathy, whimpers "Too bad," letting the case open the rest of the way. At this, you are promptly ushered off the stage to make way for the next sucker.')
+                    @wait =>
+                        removeAllCostumeItems(@)
+                        @goToRoom('Seal or No Seal (Backstage)')
+                else
+                    @print('...excitedly pulls it all the way open. "He\'s right people!"')
+                    @wait =>
+                        @print('"Now, let\'s see your prizes." "Prizes is right Jerry," says a voice coming from nowhere and everywhere all at once. "Here are some world class selections I picked up from the grocery store on the way here this morning:"')
+                        @wait =>
+                            @print('"Success comes in cans, not in can nots. Tin cans that is! That\'s why we are offering you the choice of a full week\'s supply of \'Captain Ned\'s Pickled Herring\', or \'No Ifs Ands or Butter\' brand margarine spread type product for your consumption pleasure.  Naturally you choose the margarine because you are health conscious or something.')
+                            @wait =>
+                                removeAllCostumeItems(@)
+                                @getItem('margarine')
+                                @goToRoom('Seal or No Seal (Backstage)')
         else
             @tryUniversalCommands()
 

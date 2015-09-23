@@ -21,16 +21,10 @@ module.exports =
     go: [
         'walk'
         'perambulate'
-        'flee'
-        'leave'
         'move'
         'travel'
-        'depart'
-        'decamp'
-        'exit'
         'journey'
         'mosey'
-        'withdraw'
     ]
     give: [
         'deliver'
@@ -89,4 +83,8 @@ module.exports =
         'leave'
         'out'
         'outside'
+        'withdraw'
+        'flee'
+        'depart'
+        'decamp'
     ]
