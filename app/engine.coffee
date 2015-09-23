@@ -66,13 +66,14 @@ module.exports = class Engine
     getInventory: -> JSON.parse(JSON.stringify(@inventory))
 
     doCommand: (@commandText) ->
-        if @commandText == '' then return
 
         if @waitCallback?
             callback = @waitCallback
             @waitCallback = null
             callback()
             return
+
+        if @commandText == '' then return
 
         @previousCommands.push(@commandText)
 
