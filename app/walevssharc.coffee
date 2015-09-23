@@ -441,23 +441,69 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with an empty bowl sitting there)', ->
+        if @commandText == '' then return
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('In an urn take but not churn items two not like goo.')
-        else if @matches('soda flower')
+
+        else if @matches('soda') and @hasItem('soda')
+            @print('You put the soda into the bowl.')
+            @removeItem('soda')
+            @print('Hey it looks like that worked!')
+            @wait =>
+                if not @hasItem('flowers')
+                    @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
+                else
+                    @print('It looks like something is still missing.')
+
+        else if @matches('flowers') and @hasItem('flowers')
+            @print('You put the flour into the bowl.')
+            @removeItem('flowers')
+            @print('Hey it looks like that worked!')
+            @wait =>
+                if not @hasItem('soda')
+                    @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
+                else
+                    @print('It looks like something is still missing.')
+
+        else if @matches('soda flowers') and @hasItem('soda') and @hasItem('flowers')
             @removeItem('flowers')
             @removeItem('soda')
-            @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
+            @print('Hey it looks like that worked!')
+            @wait =>
+                @goToRoom('Steak and Shake (Spooky Kitchen with bowl of powder sitting there)')
         else
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with bowl of powder sitting there)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('Your potion is dry. This willst not fly. What\'s next must be dumped, poured and cracked for a proper flapjack.')
-        else if @matches('milk egg margarine')
-            @removeItem('egg')
+        else if @matches('milk egg') or @matches('milk margarine') or @matches('egg margarine')
+            @print('Slow down there partner, I can only handle so many things at once. Tell them to me one at a time please.')
+        else if @matches('milk') and @hasItem('milk')
+            @print('You put the milk into the bowl.')
             @removeItem('milk')
-            @removeItem('margarine')
-            @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
+            @print('Hey it looks like that worked!')
+            @wait =>
+                if (not @hasItem('egg')) and (not @hasItem('margarine'))
+                    @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
+                else
+                    @print('It looks like something is still missing.')
+        else if @matches('egg') and @hasItem('egg')
+            @removeItem('egg')
+            @print('Hey it looks like that worked!')
+            @wait =>
+                if (not @hasItem('milk')) and (not @hasItem('margarine'))
+                    @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
+                else
+                    @print('It looks like something is still missing.')
+        else if @matches('egg') and @hasItem('egg')
+            @removeItem('egg')
+            @print('Hey it looks like that worked!')
+            @wait =>
+                if (not @hasItem('milk')) and (not @hasItem('margarine'))
+                    @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
+                else
+                    @print('It looks like something is still missing.')
         else
             @tryUniversalCommands()
 
