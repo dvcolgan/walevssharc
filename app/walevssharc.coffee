@@ -275,8 +275,13 @@ Type <strong>"help"</strong> to see this menu again<br>
             else
                 @print('"When the going gets tough, the tough escape from the insanity ward."')
 
+        else if @matches('look car')
+            @print('That is definitely a car.')
 
-        else if @matches('hospital')
+        else if @matches('look hospital')
+            @print('The hospital looms in the distance. It doesn\'t seem all that far away if you have a car.')
+
+        else if @matches('hospital') or @matches('car')
             @print('Sure, why not? You get in the driver\'s seat and find your way to the nearest medical treatment center. As thanks, Mr. Ocean pulls an egg out from his glove box. You accept and swim away as fast as possible. Good, I ran out of jokes for that fast.')
             @setFlag('drove_billy_to_hospital', true)
             @getItem('egg')
