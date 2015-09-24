@@ -29,6 +29,8 @@ Type <strong>"help"</strong> to see this menu again<br>
     engine.setUniversalCommands ->
         if @matches('die')
             @print('What are you doing? You are dead now.')
+        else if @matches('get ye flask')
+            @print('You can\'t get ye flask.')
         else if @matches('win')
             @print('You did it. You win. Buy yourself a pizza because you are so clever.')
         else if @matches('inv') or @matches('inventory')
