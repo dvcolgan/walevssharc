@@ -495,11 +495,11 @@ Type <strong>"help"</strong> to see this menu again<br>
                     @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
                 else
                     @print('It looks like something is still missing.')
-        else if @matches('egg') and @hasItem('egg')
-            @removeItem('egg')
+        else if @matches('margarine') and @hasItem('margarine')
+            @removeItem('margarine')
             @print('Hey it looks like that worked!')
             @wait =>
-                if (not @hasItem('milk')) and (not @hasItem('margarine'))
+                if (not @hasItem('milk')) and (not @hasItem('egg'))
                     @goToRoom('Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)')
                 else
                     @print('It looks like something is still missing.')
