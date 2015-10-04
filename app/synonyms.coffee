@@ -46,14 +46,9 @@ module.exports =
     ]
     soda: [
         'pop'
-        'can of pop'
-        'can of soda'
-        'soda can'
     ]
     margarine: [
         'butter'
-        'stick of butter'
-        'stick of margarine'
     ]
     stir: [
         'whip'
@@ -72,7 +67,7 @@ module.exports =
         'intervene'
     ]
     badge: [
-        'sherrif'
+        'sheriff'
         'sticker'
     ]
     enter: [

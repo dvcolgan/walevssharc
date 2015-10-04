@@ -161,8 +161,10 @@ Type <strong>"help"</strong> to see this menu again<br>
             @goToRoom('Ocean')
 
     engine.addRoom 'Ocean', ->
-        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+        if @exactlyMatches('__enter_room__') and @isFirstTimeEntering()
             @print('Welcome to Wale vs Sharc: The Video Game. You are Sharc and your $23 shampoo is missing. You suspect foul play. Obvious exits are North to your friend Wale.')
+        else if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+            @print('This is quite possibly the most uninteresting cube of water in the ocean.')
         else if @matches('north')
             @goToRoom('Wale')
         else
@@ -175,6 +177,9 @@ Type <strong>"help"</strong> to see this menu again<br>
                 @print('Hey, it is your friend, Wale. He is doing that thing where he has his eyes closed and acts like he did not notice your arrival. He is kind of a prick, but also your friend. What can you do? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.')
             else
                 @print('Wale is still just floating there trying to be enigmatic, would he even notice if you said something? Obvious exits are Ocean to the south, a school of Cuttlefish to the west, more Ocean to the north, and Billy Ocean to the east.')
+
+        else if @matches('look wale')
+            @print('He is just floating there, eyes closed, trying to shut out this earthly realm.')
 
         else if @matches('give pancakes')
             if @hasItem('pancakes')
@@ -321,7 +326,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Achtipus\'s Garden (Inside)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('You enter the garden and see a bountify display unfold before you.')
+            @print('You enter the garden and see a bountiful display unfold before you. The garden exit is East.')
 
         else if @matches('talk')
             if not @flagIs('talked_to_achtipus', true)
@@ -372,6 +377,9 @@ Type <strong>"help"</strong> to see this menu again<br>
                 @print('What is left of the Steak and Shake building you used to work at before your friend exploded it trying to make firework sandwiches. Cuttlefish stomping grounds lie east.')
         else if @exactlyMatches('look')
             @print("It's the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.")
+
+        else if @matches('look steak') or @matches('look shake') or @matches('look building')
+            @print('Your memories of this place don\'t quite match what it is now.')
 
         else if @matches('west') or @matches('open door') or @matches('enter') or @matches('in')
             @goToRoom('Steak and Shake (Doorway)')
@@ -448,7 +456,6 @@ Type <strong>"help"</strong> to see this menu again<br>
             @tryUniversalCommands()
 
     engine.addRoom 'Steak and Shake (Spooky Kitchen with an empty bowl sitting there)', ->
-        if @commandText == '' then return
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('In an urn take but not churn items two not like goo.')
 
@@ -555,17 +562,20 @@ Type <strong>"help"</strong> to see this menu again<br>
                 @print('It\'s that soft drink dispenser you got a bag of syrup from.')
 
         else if not @hasItem('syrup')
-            if @matches('take spritz')
+            if @matches('take spritz') or @matches('look spritz')
                 @print('Spritz, A refreshing blast of pickle and celery? No way.')
-            else if @matches('take professor') or @matches('take ginger')
+            else if @matches('take professor') or @matches('take ginger') or @matches('look professor') or @matches('look ginger')
                 @print('Professor ginger, 72 flavors and all of them make me long for a quick death. Nope nope nope.')
-            else if @matches('take cactus') or @matches('take lager')
+            else if @matches('take cactus') or @matches('take lager') or @matches('look cactus') or @matches('look lager')
                 @print('Cactus lager, You think you see some needles floating in there. Come on man.')
+
+            else if @matches('look maple') or @matches('look shim') or @matches('look sham') or @matches('look ms')
+                @print('Yum yum soda this ones looks tasty.')
 
             else if @matches('take maple') or @matches('take shim') or @matches('take sham') or @matches('take ms')
                 @print('You find it shocking that you are the first raider of this soda tomb. But then again, you have always said people don\'t know the value of a bag of liquid sugar.')
                 @getItem('syrup')
-        else if @matches('take')
+        else if @matches('take') or @matches('look')
                 @print('Yup there is a lot of soda in there, but you already picked one. Now go live with your choice.')
 
         else if @matches('east')
@@ -770,7 +780,7 @@ Type <strong>"help"</strong> to see this menu again<br>
     engine.addRoom 'Water World', ->
         if @exactlyMatches('__enter_room__')
             if @comingFrom(['Water World (Manatee Exhibit)', 'Water World (Gift Shop)'])
-                @print('There it is the exit! Just a little bit further and  you can leave, please can we leave now?')
+                @print('You are back at the Water World gate. The exit is right over there! Just a little bit further and you can leave. Please can we leave now?')
             else if @isFirstTimeEntering()
                 @print('Oh man, Water World! You love that movie. Kevin Costner should have totally gotten the Oscar. Wait this isn\'t like that. This is Water World, the home of that stupid killer whale, Shampu. What a hack! Obvious exits are north to the Manatee show, east to the gift shop, and south to the Achtipus\'s garden.')
             else
@@ -793,10 +803,10 @@ Type <strong>"help"</strong> to see this menu again<br>
             if @isFirstTimeEntering()
                 @print('And there it is: The illustrious manatee. You can see why the stands are empty. There are big umbrellas attached to some picnic tables; not much to see. Obvious exits are west to the Manatee service room and south to the park entrance.')
             else
-                @print('Well, the manatee exhibit is still a dump. A bunch of tourist families are devouring their food at some tables with umbrellas.')
+                @print('Well, the manatee exhibit is still a dump. A bunch of tourist families are devouring their food at some tables with umbrellas. Obvious exits are west to the Manatee service room and south to the park entrance.')
 
         else if @exactlyMatches('look')
-            @print('There is big wooden arch display with lots of peeling paint surrounded by your standard semicircle stone seating arrangement. Some picnic tables with umbrellas are nearby.')
+            @print('There is big wooden arch display with lots of peeling paint surrounded by your standard semicircle stone seating arrangement. Some picnic tables with umbrellas are nearby. Obvious exits are west to the Manatee service room and south to the park entrance.')
 
         else if @matches('look umbrella')
             @print('What, you have never seen an umbrella? They are red and white and covered in algae.')
