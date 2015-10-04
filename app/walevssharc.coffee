@@ -162,7 +162,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
     engine.addRoom 'Ocean', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
-            @print('You find yourself in the ocean. You are a shark by the name of Sharc and your $23 shampoo is missing. You suspect foul play. Welcome to the ocean, it is a big blue wet thing and also your home. Obvious exits are North to your friend Wale.')
+            @print('Welcome to Wale vs Sharc: The Video Game. You are Sharc and your $23 shampoo is missing. You suspect foul play. Obvious exits are North to your friend Wale.')
         else if @matches('north')
             @goToRoom('Wale')
         else
