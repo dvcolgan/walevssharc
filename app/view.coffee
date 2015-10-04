@@ -119,6 +119,19 @@ module.exports = (engine) ->
                                 window.location.href = ''
                         'Restart game'
                 ]
+                m 'textarea',
+                    style:
+                        height: '300px'
+                        width: '100%'
+                        marginTop: '10px'
+                    m.trust(engine.previousCommands.join('\n'))
+
+                m 'textarea',
+                    style:
+                        height: '300px'
+                        width: '100%'
+                        marginTop: '10px'
+                    m.trust(localStorage.getItem('progress'))
 
             m '.content',
                 style:
