@@ -432,9 +432,9 @@ Type <strong>"help"</strong> to see this menu again<br>
             @print('You got soda.')
             @getItem('soda')
 
-        else if @flagIs('have_all_items', true)
-            if @matches('make pancakes')
-                @goToRoom('Steak and Shake (Spooky Kitchen)')
+        else if @flagIs('have_all_items', true) and @matches('make pancakes')
+            @setFlag('have_all_items', 'false')
+            @goToRoom('Steak and Shake (Spooky Kitchen)')
 
         else if @matches('south')
             @goToRoom('Steak and Shake (Doorway)')
