@@ -89,6 +89,10 @@ module.exports = (engine) ->
             else
                 @vm.typer.showAll()
 
+        handleButton: (commandText) =>
+            @vm.command(commandText)
+            document.getElementById('command-input').focus()
+
 
     view: (ctrl) ->
         [
@@ -178,7 +182,7 @@ module.exports = (engine) ->
                 else
                     m 'form',
                         onsubmit: ctrl.onCommandSubmit
-                        m 'input[type=text]',
+                        m 'input[type=text][id=command-input]',
                             style:
                                 display: 'block'
                             onchange: m.withAttr('value', ctrl.vm.command)
@@ -187,4 +191,28 @@ module.exports = (engine) ->
                                 if not isInitialized
                                     element.focus()
                         m 'button[type=submit]', 'Do'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('go north')
+                            'go north'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('go south')
+                            'go south'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('go east')
+                            'go east'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('go west')
+                            'go west'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('get')
+                            'get'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('talk')
+                            'talk'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('use')
+                            'use'
+                        m 'button[type=button]',
+                            onclick: (e) -> ctrl.handleButton('look')
+                            'look'
         ]
