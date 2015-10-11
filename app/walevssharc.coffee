@@ -146,8 +146,9 @@ Type <strong>"help"</strong> to see this menu again<br>
                 @hasItem('syrup') and
                 @hasItem('milk') and
                 @hasItem('margarine'))
-            @print('"Well, I think I have all the ingredients," you say to yourself. "I just need one of those places where you put them together so it turns into something you can eat. You know, one of those...food preparing rooms."')
-            @setFlag('have_all_items', true)
+            @wait =>
+                @print('"Well, I think I have all the ingredients," you say to yourself. "I just need one of those places where you put them together so it turns into something you can eat. You know, one of those...food preparing rooms."')
+                @setFlag('have_all_items', true)
 
 
     engine.addRoom 'Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box', ->
@@ -348,20 +349,15 @@ Type <strong>"help"</strong> to see this menu again<br>
         else if @matches('look strawberries') or @matches('take strawberries') or @matches('look strawberry') or @matches('take strawberry')
             @print('You sense a surrealistic vibe coming from those strawberries.')
 
-        else if @matches('look flowers')
-            @print('You spend too much time at the gym and the firing range to appreciate flowers.')
-
-        else if @matches('take flowers')
-            if not @flagIs('given_umbrella', true)
-                @print('"I can see you like the flowers. I will let you have them if you can find something to keep it from getting so hot here. I would be able to do twice as much work if it were a bit cooler."')
-            else
-                @print('"You have great taste. These flowers are really versatile and will be good just about anywhere."')
-                @getItem('flowers')
+        else if @matches('look flowers') or @matches('take flowers')
+            @print('"I can see you like the flowers. I will let you have them if you can find something to keep it from getting so hot here. I would be able to do twice as much work if it were a bit cooler."')
 
         else if @matches('give umbrella')
             @print('"This will be perfect for blocking out that sun’s harsh rays. Thanks!"')
             @removeItem('umbrella')
-            @setFlag('given_umbrella', true)
+            @wait =>
+                @getItem('flowers')
+                @print('"Take these flowers. They are really versatile and will be good just about anywhere."')
 
         else if @matches('east') or @matches('exit')
             @goToRoom('Achtipus\'s Garden')
@@ -647,7 +643,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @getItem('clown suit')
             @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
 
-        else if @matches('oldtimey suit')
+        else if @matches('oldtimey') or @matches('ties') or @matches('colonel') or @matches('sanders')
             @getItem('oldtimey suit')
             @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
 
@@ -927,4 +923,3 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
-    #engine.setStartRoom('The Ethereal Realm')
