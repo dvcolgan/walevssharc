@@ -196,7 +196,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
         else if @matches('summon door') and @flagIs('given_pancakes', true)
             @print('You, finally convinced of your urgency and utter desperation, perform some intricate rites and incantations that would be really cool if you could see them, but I guess you will just have to use your imaginations. Text only fools!  The ethereal door stands open before you.')
-            @goToRoom('Wale (With Ethereal Door right there!')
+            @goToRoom('Wale (With Ethereal Door right there!)')
 
         else if @matches('talk wale')
             if not @flagIs('talked_to_wale', true)
@@ -938,4 +938,5 @@ Type <strong>"help"</strong> to see this menu again<br>
             @print('You remove the Quadratic Eye from its compartment, close your eyes and allow union between your spirit and the universal chi flow. Then the goblin gets cut in half and you get your shampoo back.')
 
 
-    engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
+    #engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
+    engine.setStartRoom('Wale (With Ethereal Door right there!)')
