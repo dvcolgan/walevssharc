@@ -542,7 +542,7 @@ Type <strong>"help"</strong> to see this menu again<br>
     engine.addRoom 'Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('Ten minutes later the pancakes are finished, but something is missing.')
-        else if @matches('syrup')
+        else if @matches('syrup') or @matches('maple')
             @removeItem('syrup')
             @print('You got pancakes!  Hot dang.')
             @getItem('pancakes')

@@ -101,7 +101,7 @@ module.exports = (engine) ->
                 width: '956px'
                 height: '636px'
                 overflow: 'hidden'
-                border: '2px solid #96A2BC'
+                border: '2px solid #25A5FF'
                 marginTop: (-636/2) + 'px'
                 top: '50%'
                 left: '50%'
