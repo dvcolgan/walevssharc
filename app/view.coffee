@@ -95,15 +95,43 @@ module.exports = (engine) ->
 
 
     view: (ctrl) ->
-        [
+        m '#container',
+            style:
+                position: 'absolute'
+                width: '956px'
+                height: '636px'
+                overflow: 'hidden'
+                border: '2px solid #96A2BC'
+                marginTop: (-636/2) + 'px'
+                top: '50%'
+                left: '50%'
+                marginLeft: (-956/2) + 'px'
+            m 'a[href=#]',
+                style:
+                    position: 'absolute'
+                    top: '2px'
+                    right: '4px'
+                    color: 'black'
+                    fontSize: '10px'
+                    zIndex: 100
+                onclick: (e) ->
+                    e.preventDefault()
+                    if confirm('Are you sure you want to restart the game? This will clear all progress and items you have achieved so far.')
+                        localStorage.clear()
+                        window.location.href = ''
+                'Restart game'
             m '.sidebar',
                 style:
-                    height: window.innerHeight + 'px'
-                    width: '260px'
+                    position: 'absolute'
+                    right: 0
+                    top: 0
+                    height: '596px'
+                    width: '220px'
                     padding: '20px'
                 m 'h2',
                     style:
                         marginTop: 0
+                        textAlign: 'center'
                     'Inventory'
                 [
                     for item, state of engine.getInventory()
@@ -115,36 +143,27 @@ module.exports = (engine) ->
                                 style:
                                     textDecoration: 'line-through'
                                 ITEM_NAMES[item]
-                    m 'button',
-                        onclick: ->
-                            if confirm('Are you sure you want to restart the game? This will clear all progress and items you have achieved so far.')
-                                localStorage.clear()
-                                alert('Save game deleted')
-                                window.location.href = ''
-                        'Restart game'
                 ]
-                m 'button',
-                    onclick: (e) ->
-                        localStorage.setItem('progress', JSON.stringify({"inventory":{"badge":"gotten","pancakes":"gotten"},"currentRoomName":"Steak and Shake (Kitchen)","previousCommands":["__enter_room__","__enter_room__","__enter_room__","north","__enter_room__","talk wale","look","east","__enter_room__","talk billy","drive car","look","north","__enter_room__","north","__enter_room__","make costume","__enter_room__","cowboy hat","__enter_room__","oldtimey suit","__enter_room__","metal chain","__enter_room__","look metal chain","look old-timey suit","look old-timey suit","look cowboy hat","look old timey suit","look oldtimey suit","go north","south","east","west","__enter_room__","east","__enter_room__","talk manager","__enter_room__","no seal","__enter_room__","talk manager","south","east","west","__enter_room__","north","__enter_room__","make costume","__enter_room__","rainbow wig","__enter_room__","cow print vest","__enter_room__","fake beard","__enter_room__","look rainbow wig","look cow prin vest","look cow print vest","look fake beard","south","west","__enter_room__","north","__enter_room__","west","west","make costume","__enter_room__","west","go west","rainbow wigh","rainbow wig","__enter_room__","vest","cowprint vest","cow print vest","__enter_room__","fake beard","__enter_room__","talk manager","__enter_room__","look briefcase","seal","look","seal","__enter_room__","west","__enter_room__","west","__enter_room__","south","__enter_room__","west","__enter_room__","get cuddlefish","get cuttlefish","look cuttlefish","north","__enter_room__","north","__enter_room__","east","__enter_room__","get badge","west","__enter_room__","look","north","__enter_room__","get umbrella","north","look","west","__enter_room__","talk fish","look","east","__enter_room__","souht","south","__enter_room__","yes","souht","south","__enter_room__","west","__enter_room__","get flowers","give umbrella","get flowers","look","east","__enter_room__","south","__enter_room__","east","__enter_room__","east","__enter_room__","west","__enter_room__","west","__enter_room__","west","__enter_room__","west","__enter_room__","west","__enter_room__","west","get soda","look fountain","get spritz","look fountain","look maple soda","get maple soda","east","__enter_room__","north","__enter_room__","look oven","south","__enter_room__","north","__enter_room__","make pancakes","get baking soda","make pancakes","__enter_room__","__enter_room__","baking soda","flower","__enter_room__","egg","milk","margarine","__enter_room__","stir","__enter_room__","__enter_room__","syrup","__enter_room__"],"flags":{"talked_to_wale":true,"drove_billy_to_hospital":true,"given_umbrella":true,"have_all_items":true},"roomsEntered":{"Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box":1,"How To Play":1,"Ocean":1,"Wale":4,"Billy Ocean":2,"Seal or No Seal":5,"Seal or No Seal (Dressing Room)":3,"Seal or No Seal (Dressing Room - Pick Headgear)":3,"Seal or No Seal (Dressing Room - Pick Clothes)":3,"Seal or No Seal (Dressing Room - Pick Accessory)":3,"Seal or No Seal (Backstage)":6,"Seal or No Seal (On Stage!)":2,"Wetter Ocean":1,"Cuttlefish":3,"Achtipus's Garden":3,"Water World":3,"Water World (Gift Shop)":1,"Water World (Manatee Exhibit)":2,"Water World (Mechanical Room Type Place)":1,"Achtipus's Garden (Inside)":1,"Steak and Shake":1,"Steak and Shake (Doorway)":3,"Steak and Shake (Soda Fountain)":1,"Steak and Shake (Kitchen)":3,"Steak and Shake (Spooky Kitchen)":1,"Steak and Shake (Spooky Kitchen with an empty bowl sitting there)":1,"Steak and Shake (Spooky Kitchen with bowl of powder sitting there)":1,"Steak and Shake (Spooky Kitchen with bowl of slightly more damp powder sitting there)":1,"Steak and Shake (Spooky Kitchen with bowl of mixed damp powder sitting there)":1,"Steak and Shake (Spooky Kitchen with plate of dry pancakes sitting there)":1}}))
-                        window.location.href = ''
-                    'Load Game'
-                m 'textarea',
-                    style:
-                        height: '300px'
-                        width: '100%'
-                        marginTop: '10px'
-                    m.trust(engine.previousCommands.join('\n'))
+                #m 'textarea',
+                #    style:
+                #        height: '300px'
+                #        width: '100%'
+                #        marginTop: '10px'
+                #    m.trust(engine.previousCommands.join('\n'))
 
-                m 'textarea',
-                    style:
-                        height: '300px'
-                        width: '100%'
-                        marginTop: '10px'
-                    m.trust(localStorage.getItem('progress'))
+                #m 'textarea',
+                #    style:
+                #        height: '300px'
+                #        width: '100%'
+                #        marginTop: '10px'
+                #    m.trust(localStorage.getItem('progress'))
 
             m '.content',
                 style:
-                    width: (window.innerWidth - 360) + 'px'
+                    position: 'absolute'
+                    width: (656) + 'px'
+                    height: '640px'
+                    backgroundColor: 'white'
                     padding: '20px'
                     paddingTop: 0
                 m 'h1', engine.getCurrentRoomName()
@@ -181,38 +200,72 @@ module.exports = (engine) ->
                     ]
                 else
                     m 'form',
+                        style:
+                            position: 'absolute'
+                            bottom: 0
+                            left: 0
+                            height: '134px'
+                            padding: '20px'
                         onsubmit: ctrl.onCommandSubmit
                         m 'input[type=text][id=command-input]',
                             style:
                                 display: 'block'
+                                width: '630px'
+                            placeholder: 'Type commands here.'
                             onchange: m.withAttr('value', ctrl.vm.command)
                             value: ctrl.vm.command()
                             config: (element, isInitialized, context) ->
                                 if not isInitialized
                                     element.focus()
-                        m 'button[type=submit]', 'Do'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('go north')
-                            'go north'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('go south')
-                            'go south'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('go east')
-                            'go east'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('go west')
-                            'go west'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('get')
-                            'get'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('talk')
-                            'talk'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('use')
-                            'use'
-                        m 'button[type=button]',
-                            onclick: (e) -> ctrl.handleButton('look')
-                            'look'
-        ]
+                        m 'button[type=submit]',
+                            style:
+                                position: 'absolute'
+                                right: '10px'
+                                top: '20px'
+                            'do'
+
+                        m 'div',
+                            m 'button.bottom-button[type=button]',
+                                onclick: (e) -> ctrl.handleButton('get')
+                                'get'
+                            m 'button.bottom-button[type=button]',
+                                onclick: (e) -> ctrl.handleButton('talk')
+                                'talk'
+                            m 'button.bottom-button[type=button]',
+                                onclick: (e) -> ctrl.handleButton('use')
+                                'use'
+                            m 'button.bottom-button[type=button]',
+                                onclick: (e) -> ctrl.handleButton('look')
+                                'look'
+
+                        m 'div',
+                            style:
+                                width: '214px'
+                                height: '170px'
+                                position: 'absolute'
+                                right: '-250px'
+                                bottom: '44px'
+                            m 'button.compass-button[type=button]',
+                                style:
+                                    top: 0
+                                    left: '55px'
+                                onclick: (e) -> ctrl.handleButton('go north')
+                                'go north'
+                            m 'button.compass-button[type=button]',
+                                style:
+                                    top: '120px'
+                                    left: '55px'
+                                onclick: (e) -> ctrl.handleButton('go south')
+                                'go south'
+                            m 'button.compass-button[type=button]',
+                                style:
+                                    top: '60px'
+                                    right: 0
+                                onclick: (e) -> ctrl.handleButton('go east')
+                                'go east'
+                            m 'button.compass-button[type=button]',
+                                style:
+                                    top: '60px'
+                                    left: 0
+                                onclick: (e) -> ctrl.handleButton('go west')
+                                'go west'

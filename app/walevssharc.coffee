@@ -196,10 +196,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
         else if @matches('summon door') and @flagIs('given_pancakes', true)
             @print('You, finally convinced of your urgency and utter desperation, perform some intricate rites and incantations that would be really cool if you could see them, but I guess you will just have to use your imaginations. Text only fools!  The ethereal door stands open before you.')
-            @setFlag('summoned_door', true)
-
-        else if @matches('enter door') and @flagIs('summoned_door', true)
-            @goToRoom('The Ethereal Realm')
+            @goToRoom('Wale (With Ethereal Door right there!')
 
         else if @matches('talk wale')
             if not @flagIs('talked_to_wale', true)
@@ -221,6 +218,13 @@ Type <strong>"help"</strong> to see this menu again<br>
         else
             @tryUniversalCommands()
 
+    engine.addRoom 'Wale (With Ethereal Door right there!)', ->
+        if @matches('enter door') or @matches('go door')
+            @goToRoom('The Ethereal Realm')
+        else if @exactlyMatches('look') or @matches('go')
+            @print('The ethereal beckons you come forward.')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Wetter Ocean', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
@@ -370,7 +374,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             if @isFirstTimeEntering()
                 @print('You swim up to the ruins of your old work place. This place has seen better days. Your mind is flooded with memories of floating in front of the old grill and coming up with new recipes to try when your manager had his back turned. Then someone said "Ever tried an M-80 burger? I have enough for everyone." The words echo in your mind like a phantom whisper of ages past. Cuttlefish stomping grounds lie east.')
             else
-                @print('What is left of the Steak and Shake building you used to work at before your friend exploded it trying to make firework sandwiches. Cuttlefish stomping grounds lie east.')
+                @print('This is what is left of the Steak and Shake building you used to work at before your friend exploded it trying to make firework sandwiches. Cuttlefish stomping grounds lie east.')
         else if @exactlyMatches('look')
             @print("It's the ruins of the old Steak and Shake you used to work at until your friend blew it up. The tattered remnants of a red and white awning flutters in the wind as if to surrender to an enemy. What is left of a door hangs on a single hinge to the west. Cuttlefish stomping grounds lie east.")
 
@@ -429,7 +433,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @getItem('soda')
 
         else if @flagIs('have_all_items', true) and @matches('make pancakes')
-            @setFlag('have_all_items', 'false')
+            @setFlag('have_all_items', false)
             @goToRoom('Steak and Shake (Spooky Kitchen)')
 
         else if @matches('south')
@@ -610,6 +614,8 @@ Type <strong>"help"</strong> to see this menu again<br>
 
         else if @matches('costume')
             @goToRoom('Seal or No Seal (Dressing Room - Pick Headgear)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Seal or No Seal (Dressing Room - Pick Headgear)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
@@ -630,6 +636,8 @@ Type <strong>"help"</strong> to see this menu again<br>
         else if @matches('stovepipe hat')
             @getItem('stovepipe hat')
             @goToRoom('Seal or No Seal (Dressing Room - Pick Clothes)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Seal or No Seal (Dressing Room - Pick Clothes)', ->
         if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
@@ -650,6 +658,8 @@ Type <strong>"help"</strong> to see this menu again<br>
         else if @matches('cow vest') or @matches('print vest')
             @getItem('cow print vest')
             @goToRoom('Seal or No Seal (Dressing Room - Pick Accessory)')
+        else
+            @tryUniversalCommands()
 
     engine.addRoom 'Seal or No Seal (Dressing Room - Pick Accessory)', ->
         done = 'You look absolutely horrible! Or amazing, depending on your perspective. But the true judge will be the game show manager.'
@@ -874,8 +884,14 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'The Ethereal Realm', ->
-        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
+        if @exactlyMatches('__enter_room__')
             @print('You have entered The Ethereal Realm. Why did you do that? That was a bad decision. Wale is at your side. There are a bunch of weird, spacey platforms and junk floating around in a cosmic void -- your typical surrealist dreamscape environment. Ahead is an ugly monster. He is clutching something in his hand. Obvious exits are NONE! This is the world of waking nightmares you dingus.')
+        else if @exactlyMatches('look')
+            @print('This place is definitely awful. That monster up ahead looks suspicious.')
+        else if @matches('look hand') or @matches('look something')
+            @print('It looks like some kind of cylindric plastic container. Hard to make out from here though.')
+        else if @matches('look monster')
+            @print('The monster sure is ugly.')
         else if @matches('talk monster')
             @print('You are getting worse at this game. You approach said monster in an effort to get some leads on your precious hair product. Maybe it would have been a better idea to start by just asking him about the status of the local basketball team or something?')
             @wait =>
@@ -896,7 +912,7 @@ Type <strong>"help"</strong> to see this menu again<br>
             @print('Oh very funny.  Now is definitely not the time for snark.')
 
         else if @matches('attack')
-            @print('You start to lunge towards the creature, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.')
+            @print('You swim up to engage the monster, but Wale pushes you out of the way in a charge himself. You cringe as you hear the slashing of flesh. Red mist floats out of Wale\'s side. Your head is spinning.')
             @wait =>
                 @print('"Now Sharc!", he wheezes, "Use the power of the Quadratic Eye."')
                 @wait =>

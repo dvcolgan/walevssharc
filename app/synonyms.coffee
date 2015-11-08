@@ -65,6 +65,9 @@ module.exports =
         'punch'
         'bite'
         'intervene'
+        'protect'
+        'bludgeon'
+        'act'
     ]
     badge: [
         'sheriff'

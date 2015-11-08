@@ -9,10 +9,17 @@
             body {
                 margin: 0;
                 padding: 0;
-                font-size: 30px;
+                font-size: 24px;
+                background-color: #BFC6D6;
+                background-image: url(background.jpg);
+                background-repeat: no-repeat;
+                background-position: center top;
+                background-size: 100%;
+                font-family: 'Droid Sans', sans-serif;
             }
             h1,h2,h3,h4,h5,h6 {
                 font-family: 'Droid Sans', sans-serif;
+                margin: 20px 0;
             }
             .creepy {
                 font-family: 'Creepster', sans-serif;
@@ -20,25 +27,40 @@
             .sidebar {
                 float: right;
                 background-color: #ccc;
+                    background-color: #61BDFF;
+            }
+            .bottom-button {
+                margin-top: 10px;
+                margin-right: 10px;
+            }
+            .compass-button {
+                position: absolute;
+                width: 100px;
+                height: 50px;
+                padding: 0;
             }
             .content {
                 float: left;
             }
             input[type=text] {
-                font-size: 30px;
+                font-size: 20px;
+                padding: 0;
+                padding-left: 10px;
+                height: 46px;
                 width: 100%;
             }
             button {
-                font-size: 30px;
+                height: 50px;
+                padding: 0 20px;
+                font-size: 20px;
             }
         </style>
     </head>
     <body>
         <div id="app">
             <h1>Rather Loading...</h1>
-            <button onclick="localStorage.clear()">Clear Bad Data</button>
         </div>
-        <script src="/bundle.js"></script>
+        <script src="bundle.js"></script>
         <script>
 /* Web Font Loader v1.5.18 - (c) Adobe Systems, Google. License: Apache 2.0 */
 ;(function(window,document,undefined){function aa(a,b,c){return a.call.apply(a.bind,arguments)}function ba(a,b,c){if(!a)throw Error();if(2<arguments.length){var d=Array.prototype.slice.call(arguments,2);return function(){var c=Array.prototype.slice.call(arguments);Array.prototype.unshift.apply(c,d);return a.apply(b,c)}}return function(){return a.apply(b,arguments)}}function k(a,b,c){k=Function.prototype.bind&&-1!=Function.prototype.bind.toString().indexOf("native code")?aa:ba;return k.apply(null,arguments)}var n=Date.now||function(){return+new Date};function q(a,b){this.K=a;this.w=b||a;this.G=this.w.document}q.prototype.createElement=function(a,b,c){a=this.G.createElement(a);if(b)for(var d in b)b.hasOwnProperty(d)&&("style"==d?a.style.cssText=b[d]:a.setAttribute(d,b[d]));c&&a.appendChild(this.G.createTextNode(c));return a};function r(a,b,c){a=a.G.getElementsByTagName(b)[0];a||(a=document.documentElement);a&&a.lastChild&&a.insertBefore(c,a.lastChild)}function ca(a,b){function c(){a.G.body?b():setTimeout(c,0)}c()}
