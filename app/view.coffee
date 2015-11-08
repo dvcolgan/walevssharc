@@ -131,15 +131,14 @@ module.exports = (engine) ->
                 m 'h2',
                     style:
                         marginTop: 0
-                        textAlign: 'center'
                     'Inventory'
                 [
                     for item, state of engine.getInventory()
                         if state == 'gotten'
-                            m 'p',
+                            m 'p.inventory-item',
                                 ITEM_NAMES[item]
                         else if state == 'used'
-                            m 'p',
+                            m 'p.inventory-item',
                                 style:
                                     textDecoration: 'line-through'
                                 ITEM_NAMES[item]
