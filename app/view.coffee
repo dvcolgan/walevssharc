@@ -102,8 +102,7 @@ module.exports = (engine) ->
                 height: '636px'
                 overflow: 'hidden'
                 border: '2px solid #25A5FF'
-                marginTop: (-636/2) + 'px'
-                top: '50%'
+                top: 0
                 left: '50%'
                 marginLeft: (-956/2) + 'px'
             m 'a[href=#]',
@@ -169,34 +168,13 @@ module.exports = (engine) ->
                 m 'p', m.trust(ctrl.vm.typer.getTextSoFar())
 
                 if engine.getCurrentRoomName() == 'End'
-                    [
-                        m 'div',
-                            style:
-                                width: '100%'
-                                textAlign: 'center'
-                            m 'img',
-                                src: '/shark-showering.png'
-                        m 'br'
-                        m 'br'
-                        m 'h3', 'Do you even feedback?'
-                        m 'div',
-                            m 'iframe',
-                                src: 'https://docs.google.com/forms/d/1drHKsfEzS_zA17YTd7OaWYis1Q8Jjf33fr7K6OcRBok/viewform?embedded=true'
-                                width: '760'
-                                height: '500'
-                                frameborder: '0'
-                                marginheight: '0'
-                                marginwidth: '0'
-                                style:
-                                    padding: '2px'
-                                    border: '1px solid grey'
-                                    marginRight: '20px'
-                                'Loading...'
-                            m 'textarea',
-                                style:
-                                    height: '500px'
-                                m.trust(engine.previousCommands.join('\n'))
-                    ]
+                    m 'div',
+                        style:
+                            width: '100%'
+                            textAlign: 'center'
+                        m 'img',
+                            src: '/shark-showering.png'
+                        m 'p', 'Yay good job you win.'
                 else
                     m 'form',
                         style:
@@ -225,16 +203,16 @@ module.exports = (engine) ->
 
                         m 'div',
                             m 'button.bottom-button[type=button]',
-                                onclick: (e) -> ctrl.handleButton('get')
+                                onclick: (e) -> ctrl.handleButton('get ')
                                 'get'
                             m 'button.bottom-button[type=button]',
-                                onclick: (e) -> ctrl.handleButton('talk')
+                                onclick: (e) -> ctrl.handleButton('talk ')
                                 'talk'
                             m 'button.bottom-button[type=button]',
-                                onclick: (e) -> ctrl.handleButton('use')
+                                onclick: (e) -> ctrl.handleButton('use ')
                                 'use'
                             m 'button.bottom-button[type=button]',
-                                onclick: (e) -> ctrl.handleButton('look')
+                                onclick: (e) -> ctrl.handleButton('look ')
                                 'look'
 
                         m 'div',
