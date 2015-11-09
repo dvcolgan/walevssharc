@@ -983,7 +983,7 @@ Type <strong>"help"</strong> to see this menu again<br>
 
 
     engine.addRoom 'End', ->
-        if @exactlyMatches('__enter_room__')
+        if @exactlyMatches('__enter_room__') or @exactlyMatches('look')
             @print('You remove the Quadratic Eye from its compartment, close your eyes and allow union between your spirit and the universal chi flow. Then the goblin gets cut in half and you get your shampoo back.')
 
     engine.setStartRoom('Wale vs Sharc: The Comic: The Interactive Software Title For Your Computer Box')
